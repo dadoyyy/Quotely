@@ -26,7 +26,7 @@ const sizes: Record<Size, string> = {
 
 export function buttonClass(variant: Variant = "primary", size: Size = "md", extra?: string) {
   return cn(
-    "group/btn inline-flex cursor-pointer touch-manipulation items-center justify-center gap-2 font-medium whitespace-nowrap select-none",
+    "btn-fx group/btn inline-flex cursor-pointer touch-manipulation items-center justify-center gap-2 font-medium whitespace-nowrap select-none",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500",
     "disabled:pointer-events-none disabled:opacity-60 aria-disabled:pointer-events-none aria-disabled:opacity-60",
     variants[variant],
@@ -41,7 +41,7 @@ export function ArrowBadge({ className }: { className?: string }) {
     <span
       aria-hidden
       className={cn(
-        "grid size-6 shrink-0 place-items-center rounded-full bg-brand-400 text-neutral-900 transition-transform duration-300 group-hover/btn:translate-x-0.5",
+        "grid size-6 shrink-0 place-items-center rounded-full bg-brand-400 text-neutral-900 transition-transform duration-300 group-hover/btn:translate-x-1 group-active/btn:translate-x-1.5",
         className,
       )}
     >

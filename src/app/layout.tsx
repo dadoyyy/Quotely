@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Suspense } from "react";
+import { ClickEffects } from "@/components/click-effects";
 import { ProgressBar } from "@/components/progress-bar";
 import { ToastProvider } from "@/components/toast";
 import "./globals.css";
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col"><ToastProvider>
           <Suspense fallback={null}><ProgressBar /></Suspense>
+          <ClickEffects />
           {children}
         </ToastProvider></body>
     </html>

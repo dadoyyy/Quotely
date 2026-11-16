@@ -102,6 +102,22 @@ a, button, input, select, textarea, summary, label {
 @media (hover: hover) { .fx-marquee:hover { animation-play-state: paused; } }
 .fx-shine::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.5) 50%, transparent 70%); animation: fx-shine 3.8s ease-in-out infinite; }
 
+/* Buttons: springy press, a light sheen on hover, a ripple where you touch. */
+@keyframes fx-ripple { from { transform: scale(0); opacity: 0.3; } to { transform: scale(1); opacity: 0; } }
+.btn-fx {
+  position: relative; overflow: hidden; isolation: isolate;
+  transition-property: transform, background-color, border-color, box-shadow, color, opacity;
+  transition-duration: 320ms, 150ms, 150ms, 220ms, 150ms, 150ms;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1), var(--ease-smooth), var(--ease-smooth), var(--ease-smooth), var(--ease-smooth), var(--ease-smooth);
+}
+.btn-fx::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.22) 50%, transparent 65%);
+  transform: translateX(-130%); transition: transform 650ms var(--ease-smooth);
+}
+@media (hover: hover) { .btn-fx:hover::before { transform: translateX(130%); } }
+.fx-ripple { position: absolute; z-index: -1; border-radius: 9999px; background: currentColor; pointer-events: none; animation: fx-ripple 650ms ease-out forwards; }
+
 /* Tables inside the app: tinted header, quiet row hover. */
 main table thead { background: var(--color-neutral-50); }
 main table thead th { font-weight: 600; letter-spacing: 0.06em; color: var(--color-neutral-600); }

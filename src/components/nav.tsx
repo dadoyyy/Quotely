@@ -34,7 +34,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             onClick={() => { setClicked({ href: item.href, from: pathname }); onNavigate?.(); }}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium",
+              "btn-fx group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium active:scale-[0.97]",
               active
                 ? "bg-neutral-900 text-white shadow-soft"
                 : "text-neutral-600 hover:bg-white hover:text-neutral-900 hover:shadow-soft",
