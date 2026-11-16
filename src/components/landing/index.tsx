@@ -131,9 +131,9 @@ export function Landing() {
     <div className="w-full overflow-x-clip bg-white">
       <RevealOnScroll />
       <div>
-        <div className="px-5 pb-8 sm:px-10 lg:px-16 xl:px-24 2xl:px-32">
+        <div>
           {/* ---------------------------------------------------------- nav */}
-          <header className="sticky top-0 z-30 -mx-5 flex items-center justify-between gap-4 border-b border-neutral-200/70 bg-white/90 px-5 py-4 backdrop-blur-md sm:-mx-10 sm:px-10 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 2xl:-mx-32 2xl:px-32">
+          <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-neutral-200/70 bg-white/90 px-5 sm:px-10 lg:px-14 xl:px-20 py-4 backdrop-blur-md">
             <Link href="/" className="shrink-0"><Logo /></Link>
             <nav aria-label="Primary" className="hidden items-center gap-9 text-sm font-medium text-neutral-600 lg:flex">
               {NAV.map((n) => <a key={n.href} href={n.href} className="relative py-1 hover:text-neutral-900 after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-400 after:transition-transform hover:after:scale-x-100">{n.label}</a>)}
@@ -156,13 +156,13 @@ export function Landing() {
           </header>
 
           {/* ---------------------------------------------------------- hero */}
-          <section className="grid items-center gap-10 py-8 sm:py-14 lg:grid-cols-[1fr_1fr] lg:gap-6 lg:py-16">
+          <section className="relative overflow-hidden border-b border-neutral-200/60 bg-[radial-gradient(rgb(14_28_21/0.07)_1px,transparent_1px)] [background-size:22px_22px]"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-12 sm:py-20 lg:py-24 grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-6">
             <div className="animate-enter space-y-6">
               <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">
                 <span className="size-1.5 rounded-full bg-brand-500" />
                 Quotes · Approvals · Invoices
               </span>
-              <h1 className="text-[2.6rem] font-semibold leading-[1.06] tracking-tight text-neutral-900 sm:text-6xl lg:text-[3.55rem] xl:text-[3.9rem]">
+              <h1 className="text-[2.6rem] font-semibold leading-[1.06] tracking-tight text-neutral-900 sm:text-6xl lg:text-[3.55rem] xl:text-[4.4rem] 2xl:text-[5rem]">
                 Win more jobs with quotes that
                 <span className="relative mt-1 block text-brand-600 sm:whitespace-nowrap">
                   close themselves.
@@ -183,24 +183,23 @@ export function Landing() {
                 ))}
               </ul>
             </div>
-            <div className="animate-enter [animation-delay:100ms]"><HeroArt className="animate-float" /></div>
-          </section>
+            <div className="animate-enter [animation-delay:100ms] xl:scale-[1.12] 2xl:scale-[1.25]"><HeroArt className="animate-float" /></div>
+          </div></section>
 
           {/* ---------------------------------------------------------- who for */}
-          <section aria-label="Who it is for" className="reveal rounded-3xl border border-neutral-200/80 bg-white px-5 py-5 shadow-soft sm:px-8 sm:py-6">
-            <p className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Made for businesses that quote by the job</p>
+          <section aria-label="Who it is for" className="reveal border-b border-neutral-200/60 bg-neutral-900 text-white"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-8"><p className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">Made for businesses that quote by the job</p>
             <ul className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
               {INDUSTRIES.map((i) => (
-                <li key={i.name} className="flex items-center justify-center gap-2.5 text-[15px] font-semibold text-neutral-800">
-                  <Icon d={i.d} className="size-6 text-brand-600" />
+                <li key={i.name} className="flex items-center justify-center gap-2.5 text-[15px] font-semibold text-neutral-100">
+                  <Icon d={i.d} className="size-6 text-brand-400" />
                   {i.name}
                 </li>
               ))}
             </ul>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- what */}
-          <section id="what" className="reveal scroll-mt-24 pt-20 sm:pt-28">
+          <section id="what" className="reveal scroll-mt-20 bg-white"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <SectionHead eyebrow="What it does" title={<>Everything between “how much?” and “<span className="text-brand-600">paid</span>”</>} sub="One tool for the whole job, from the first message to the last payment." />
             <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {WHAT.map(({ title, body, Art, href }) => (
@@ -214,11 +213,11 @@ export function Landing() {
                 </li>
               ))}
             </ul>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- dark CTA */}
-          <section className="reveal relative mt-20 overflow-hidden rounded-3xl bg-neutral-900 sm:mt-28">
-            <div className="relative grid items-center gap-4 p-7 sm:p-12 md:grid-cols-[1.1fr_1fr]">
+          <section className="reveal relative overflow-hidden bg-neutral-900 [background-image:linear-gradient(to_right,rgb(255_255_255/0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgb(255_255_255/0.035)_1px,transparent_1px)] [background-size:56px_56px]">
+            <div className="relative grid items-center gap-4 px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-20 md:grid-cols-[1.1fr_1fr]">
               <div className="space-y-4">
                 <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">Let&apos;s make things happen</h2>
                 <p className="max-w-md text-neutral-300">Pick a sample price list, build your first quote in minutes, and send it before your customer loses interest.</p>
@@ -229,7 +228,7 @@ export function Landing() {
           </section>
 
           {/* ---------------------------------------------------------- how */}
-          <section id="how" className="reveal scroll-mt-24 pt-20 sm:pt-28">
+          <section id="how" className="reveal scroll-mt-20 bg-brand-50/70 border-y border-neutral-200/60"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <SectionHead eyebrow="How it works" title="From first message to paid, in four steps" />
             <ol className="relative mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <div aria-hidden className="absolute left-[12%] right-[12%] top-[2.2rem] hidden border-t-2 border-dashed border-brand-300 lg:block" />
@@ -242,10 +241,10 @@ export function Landing() {
                 </li>
               ))}
             </ol>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- showcase */}
-          <section className="reveal pt-20 sm:pt-28">
+          <section className="reveal bg-white"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <div className="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-14">
               <div className="space-y-6">
                 <Eyebrow>Your side</Eyebrow>
@@ -260,10 +259,10 @@ export function Landing() {
                 <PhoneMock />
               </div>
             </div>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- benefits */}
-          <section id="benefits" className="reveal scroll-mt-24 pt-20 sm:pt-28">
+          <section id="benefits" className="reveal scroll-mt-20 bg-brand-50/70 border-y border-neutral-200/60"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <SectionHead eyebrow="Benefits" title="Less admin. More jobs won." sub="The small things that add up to hours back every week." />
             <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {BENEFITS.map((b) => (
@@ -274,10 +273,10 @@ export function Landing() {
                 </li>
               ))}
             </ul>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- industries */}
-          <section className="reveal pt-20 sm:pt-28">
+          <section className="reveal bg-white"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <SectionHead eyebrow="Start fast" title="Start from a ready-made price list" sub="Pick one when you sign up, then change the prices to yours." />
             <div className="mt-12 grid gap-4 lg:grid-cols-3">
               {industries.map((c) => (
@@ -296,18 +295,18 @@ export function Landing() {
                 </article>
               ))}
             </div>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- numbers */}
-          <section id="numbers" className="reveal pt-20 sm:pt-28">
+          <section id="numbers" className="reveal scroll-mt-20 bg-neutral-900"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <Eyebrow>By design</Eyebrow>
-                <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Careful with your numbers</h2>
+                <Eyebrow className="text-brand-400">By design</Eyebrow>
+                <h2 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Careful with your numbers</h2>
               </div>
-              <p className="max-w-sm text-sm text-neutral-600">Money software should be boring and exact. These are not marketing claims, they are how it is built.</p>
+              <p className="max-w-sm text-sm text-neutral-400">Money software should be boring and exact. These are not marketing claims, they are how it is built.</p>
             </div>
-            <div className="mt-8 grid overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-900 to-neutral-800 text-white md:grid-cols-3">
+            <div className="mt-10 grid overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] text-white md:grid-cols-3">
               {[
                 { icon: "M5 4h14v16H5zM8 8h8M8 12h3M8 16h3", title: "Rounding drift", value: "₱0.00", body: "Every amount is whole centavos, so totals always add up exactly." },
                 { icon: "M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z", title: "Prices written by AI", value: "0", body: "AI picks items from your list. You set every price." },
@@ -322,10 +321,10 @@ export function Landing() {
                 </div>
               ))}
             </div>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- trust */}
-          <section className="reveal pt-20 sm:pt-28">
+          <section className="reveal bg-white"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <SectionHead eyebrow="Built to be trusted" title="Your quotes, your customers, your numbers" sub="Security and accuracy are enforced in the database itself, not just in the screens." />
             <ul className="mt-12 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
               {TRUST.map((t) => (
@@ -335,10 +334,10 @@ export function Landing() {
                 </li>
               ))}
             </ul>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- faq */}
-          <section id="faq" className="reveal scroll-mt-24 pt-20 sm:pt-28">
+          <section id="faq" className="reveal scroll-mt-20 bg-brand-50/70 border-y border-neutral-200/60"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <SectionHead eyebrow="FAQ" title="Questions, answered" />
             <div className="mx-auto mt-10 max-w-3xl space-y-3">
               {FAQ.map((f) => (
@@ -353,42 +352,33 @@ export function Landing() {
                 </details>
               ))}
             </div>
-          </section>
+          </div></section>
 
           {/* ---------------------------------------------------------- final CTA */}
-          <section className="reveal mt-20 sm:mt-28">
-            <div className="relative overflow-hidden rounded-3xl bg-neutral-900 p-8 text-center text-white sm:p-14">
-              <div className="relative mx-auto max-w-2xl space-y-5">
-                <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Ready to quote like a pro?</h2>
-                <p className="text-neutral-300 sm:text-lg">Start with a sample price list and send your first quote today. Or look around the demo first.</p>
-                <div className="flex flex-wrap justify-center gap-3 pt-2">
-                  <ButtonLink href="/signup" variant="accent" size="lg" arrow>Get started</ButtonLink>
-                  <ButtonLink href="/demo" variant="secondary" size="lg">See the demo</ButtonLink>
-                </div>
+          <section className="reveal bg-brand-400"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 flex flex-col items-start justify-between gap-8 py-16 sm:py-20 lg:flex-row lg:items-center">
+              <div className="max-w-2xl space-y-3">
+                <h2 className="text-3xl font-semibold tracking-tight text-neutral-900 sm:text-5xl">Ready to quote like a pro?</h2>
+                <p className="text-neutral-800 sm:text-lg">Start with a sample price list and send your first quote today. Or look around the demo first.</p>
               </div>
-            </div>
-            <div className="mt-4 flex flex-col items-start justify-between gap-3 rounded-2xl border border-brand-200 bg-brand-50 p-4 sm:flex-row sm:items-center sm:px-6">
-              <p className="flex items-center gap-3 text-sm font-medium text-neutral-900">
-                <span className="grid size-9 place-items-center rounded-xl bg-brand-400 text-neutral-900"><Icon d="M5 15c-1.5 1.5-2 5-2 5s3.5-.5 5-2M9 15l-3-3 6-6a8 8 0 0 1 8-2 8 8 0 0 1-2 8l-6 6-3-3z" /></span>
-                Take your quoting to the next level. <span className="font-normal text-neutral-600">Your first quote takes minutes.</span>
-              </p>
-              <ButtonLink href="/signup" size="sm" arrow>Let&apos;s go</ButtonLink>
-            </div>
-          </section>
+              <div className="flex flex-wrap gap-3">
+                <ButtonLink href="/signup" size="lg" arrow>Get started</ButtonLink>
+                <ButtonLink href="/demo" variant="secondary" size="lg">See the demo</ButtonLink>
+              </div>
+            </div></section>
 
           {/* ---------------------------------------------------------- footer */}
-          <footer className="mt-12 flex flex-col items-center justify-between gap-5 border-t border-neutral-200 pt-6 text-sm text-neutral-500 md:flex-row">
-            <Logo />
+          <footer className="flex flex-col items-center justify-between gap-5 bg-neutral-900 px-5 sm:px-10 lg:px-14 xl:px-20 py-8 text-sm text-neutral-400 md:flex-row">
+            <Logo className="text-white" />
             <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-7 gap-y-2 font-medium">
-              {NAV.map((n) => <a key={n.href} href={n.href} className="hover:text-neutral-900">{n.label}</a>)}
+              {NAV.map((n) => <a key={n.href} href={n.href} className="hover:text-white">{n.label}</a>)}
             </nav>
             <div className="flex items-center gap-2">
               {SOCIAL_LINKS.map((l) => (
-                <Link key={l.href} href={l.href} className="rounded-full border border-neutral-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-neutral-700 shadow-sm hover:border-brand-400 hover:bg-brand-50">{l.label}</Link>
+                <Link key={l.href} href={l.href} className="rounded-full border border-white/15 px-3.5 py-1.5 text-xs font-semibold text-neutral-200 hover:border-brand-400 hover:text-brand-400">{l.label}</Link>
               ))}
             </div>
           </footer>
-          <p className="mt-6 text-center text-xs text-neutral-400">© {new Date().getFullYear()} Quotely</p>
+          <p className="bg-neutral-900 pb-8 text-center text-xs text-neutral-500">© {new Date().getFullYear()} Quotely</p>
         </div>
       </div>
     </div>

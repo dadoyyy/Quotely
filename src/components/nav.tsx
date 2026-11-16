@@ -22,6 +22,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const target = clicked && clicked.from === pathname ? clicked.href : null;
   return (
     <nav className="flex flex-col gap-1" aria-label="Main">
+      <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-400">Workspace</p>
       {items.map((item) => {
         const active = target
           ? item.href === target
@@ -118,9 +119,11 @@ export function AppShell({ account, footer, children }: { account: ReactNode; fo
         </div>
       )}
 
-      <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10 print:p-0">
-        <div key={pathname} className="w-full animate-enter">{children}</div>
-      </main>
+      <div className="min-w-0 flex-1">
+        <main className="p-4 sm:p-6 lg:p-10 print:p-0">
+          <div key={pathname} className="w-full animate-enter">{children}</div>
+        </main>
+      </div>
     </div>
   );
 }
