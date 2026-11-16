@@ -392,7 +392,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
       </div>
 
       <div className="fixed inset-x-0 bottom-0 z-10 border-t border-neutral-200 bg-white/90 px-4 py-3 shadow-[0_-8px_24px_-16px_rgb(14_28_21/0.25)] backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3">
           <p
             role="status"
             className={cn("text-sm", status?.kind === "error" ? "text-red-600" : "text-neutral-600")}

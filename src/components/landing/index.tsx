@@ -128,12 +128,12 @@ export function Landing() {
   }));
 
   return (
-    <div className="mx-auto w-full max-w-[1240px] p-2 sm:p-4 lg:p-6">
+    <div className="w-full overflow-x-clip bg-white">
       <RevealOnScroll />
-      <div className="overflow-x-clip rounded-[1.75rem] border border-neutral-200/70 bg-white/90 shadow-lift sm:rounded-[2.5rem]">
-        <div className="px-4 pb-8 sm:px-8 lg:px-14">
+      <div>
+        <div className="px-5 pb-8 sm:px-10 lg:px-16 xl:px-24 2xl:px-32">
           {/* ---------------------------------------------------------- nav */}
-          <header className="sticky top-0 z-30 -mx-4 flex items-center justify-between gap-4 bg-white/80 px-4 py-4 backdrop-blur-md sm:-mx-8 sm:px-8 lg:-mx-14 lg:px-14">
+          <header className="sticky top-0 z-30 -mx-5 flex items-center justify-between gap-4 border-b border-neutral-200/70 bg-white/90 px-5 py-4 backdrop-blur-md sm:-mx-10 sm:px-10 lg:-mx-16 lg:px-16 xl:-mx-24 xl:px-24 2xl:-mx-32 2xl:px-32">
             <Link href="/" className="shrink-0"><Logo /></Link>
             <nav aria-label="Primary" className="hidden items-center gap-9 text-sm font-medium text-neutral-600 lg:flex">
               {NAV.map((n) => <a key={n.href} href={n.href} className="relative py-1 hover:text-neutral-900 after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-brand-400 after:transition-transform hover:after:scale-x-100">{n.label}</a>)}
@@ -205,8 +205,8 @@ export function Landing() {
             <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {WHAT.map(({ title, body, Art, href }) => (
                 <li key={title}>
-                  <Link href={href} className="group flex h-full flex-col rounded-3xl border border-neutral-200/80 bg-gradient-to-b from-brand-50 via-white to-white p-5 shadow-soft transition duration-300 hover:-translate-y-1.5 hover:border-brand-300 hover:shadow-lift">
-                    <div className="grid h-28 place-items-center rounded-2xl bg-gradient-to-br from-brand-100/70 to-brand-50/30"><Art /></div>
+                  <Link href={href} className="group flex h-full flex-col rounded-3xl border border-neutral-200/80 bg-white p-5 transition duration-300 hover:-translate-y-1.5 hover:border-brand-300 hover:shadow-lift">
+                    <div className="grid h-28 place-items-center rounded-2xl bg-brand-50"><Art /></div>
                     <h3 className="mt-5 text-lg font-semibold leading-snug">{title}</h3>
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-600">{body}</p>
                     <span className="mt-5 flex items-center justify-between text-sm font-semibold text-neutral-900">Learn more <CircleArrow /></span>
@@ -217,8 +217,7 @@ export function Landing() {
           </section>
 
           {/* ---------------------------------------------------------- dark CTA */}
-          <section className="reveal relative mt-20 overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-900 via-neutral-800 to-brand-900 sm:mt-28">
-            <div aria-hidden className="absolute -left-24 -top-24 size-72 rounded-full bg-brand-400/10 blur-3xl" />
+          <section className="reveal relative mt-20 overflow-hidden rounded-3xl bg-neutral-900 sm:mt-28">
             <div className="relative grid items-center gap-4 p-7 sm:p-12 md:grid-cols-[1.1fr_1fr]">
               <div className="space-y-4">
                 <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">Let&apos;s make things happen</h2>
@@ -282,7 +281,7 @@ export function Landing() {
             <SectionHead eyebrow="Start fast" title="Start from a ready-made price list" sub="Pick one when you sign up, then change the prices to yours." />
             <div className="mt-12 grid gap-4 lg:grid-cols-3">
               {industries.map((c) => (
-                <article key={c.id} className="flex flex-col rounded-3xl border border-neutral-200/80 bg-gradient-to-b from-brand-50 to-white p-6 shadow-soft">
+                <article key={c.id} className="flex flex-col rounded-3xl border border-neutral-200/80 bg-brand-50/60 p-6">
                   <h3 className="text-lg font-semibold">{c.label}</h3>
                   <p className="mt-1 text-sm text-neutral-600">{c.blurb}</p>
                   <ul className="mt-5 flex-1 space-y-2">
@@ -358,8 +357,7 @@ export function Landing() {
 
           {/* ---------------------------------------------------------- final CTA */}
           <section className="reveal mt-20 sm:mt-28">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-900 via-neutral-800 to-brand-900 p-8 text-center text-white sm:p-14">
-              <div aria-hidden className="absolute left-1/2 top-0 size-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-400/25 blur-3xl" />
+            <div className="relative overflow-hidden rounded-3xl bg-neutral-900 p-8 text-center text-white sm:p-14">
               <div className="relative mx-auto max-w-2xl space-y-5">
                 <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">Ready to quote like a pro?</h2>
                 <p className="text-neutral-300 sm:text-lg">Start with a sample price list and send your first quote today. Or look around the demo first.</p>

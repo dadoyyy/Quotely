@@ -80,7 +80,7 @@ export function AppShell({ account, footer, children }: { account: ReactNode; fo
   return (
     <div className="min-h-screen lg:flex">
       {/* Large screens: sticky sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col gap-6 border-r border-neutral-200/70 bg-white/60 p-5 backdrop-blur lg:flex print:hidden">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col gap-6 border-r border-neutral-200/70 bg-white p-5 lg:flex print:hidden">
         <Link href="/app" className="px-1"><Logo /></Link>
         <NavLinks />
         <div className="mt-auto space-y-3">
@@ -119,7 +119,7 @@ export function AppShell({ account, footer, children }: { account: ReactNode; fo
       )}
 
       <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10 print:p-0">
-        <div key={pathname} className="mx-auto max-w-5xl animate-enter">{children}</div>
+        <div key={pathname} className="w-full animate-enter">{children}</div>
       </main>
     </div>
   );
