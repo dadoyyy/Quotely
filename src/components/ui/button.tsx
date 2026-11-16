@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
+import { LinkPending } from "@/components/ui/link-pending";
 import { cn } from "@/lib/cn";
 
 type Variant = "primary" | "accent" | "secondary" | "danger" | "ghost";
@@ -7,14 +8,14 @@ type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-neutral-900 text-white shadow-sm hover:-translate-y-px hover:bg-neutral-800 hover:shadow-lift active:translate-y-0 active:scale-[0.98]",
+    "bg-neutral-900 text-white shadow-sm hover:-translate-y-px hover:bg-neutral-800 hover:shadow-lift active:translate-y-0 active:scale-[0.96]",
   accent:
-    "bg-brand-400 text-neutral-900 shadow-glow hover:-translate-y-px hover:bg-brand-300 active:translate-y-0 active:scale-[0.98]",
+    "bg-brand-400 text-neutral-900 shadow-glow hover:-translate-y-px hover:bg-brand-300 active:translate-y-0 active:scale-[0.96]",
   secondary:
-    "border border-neutral-200 bg-white text-neutral-900 shadow-sm hover:-translate-y-px hover:border-brand-400 hover:bg-brand-50 active:translate-y-0 active:scale-[0.98]",
+    "border border-neutral-200 bg-white text-neutral-900 shadow-sm hover:-translate-y-px hover:border-brand-400 hover:bg-brand-50 active:translate-y-0 active:scale-[0.96]",
   danger:
-    "bg-red-600 text-white shadow-sm hover:-translate-y-px hover:bg-red-700 active:translate-y-0 active:scale-[0.98]",
-  ghost: "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.98]",
+    "bg-red-600 text-white shadow-sm hover:-translate-y-px hover:bg-red-700 active:translate-y-0 active:scale-[0.96]",
+  ghost: "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900 active:scale-[0.96]",
 };
 
 const sizes: Record<Size, string> = {
@@ -25,7 +26,7 @@ const sizes: Record<Size, string> = {
 
 export function buttonClass(variant: Variant = "primary", size: Size = "md", extra?: string) {
   return cn(
-    "group/btn inline-flex cursor-pointer items-center justify-center gap-2 font-medium whitespace-nowrap select-none",
+    "group/btn inline-flex cursor-pointer touch-manipulation items-center justify-center gap-2 font-medium whitespace-nowrap select-none",
     "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500",
     "disabled:pointer-events-none disabled:opacity-60 aria-disabled:pointer-events-none aria-disabled:opacity-60",
     variants[variant],
@@ -74,6 +75,7 @@ export function Button({ variant, size, arrow, className, children, ...props }: 
 export function ButtonLink({ variant, size, arrow, className, children, ...props }: ComponentProps<typeof Link> & Extras) {
   return (
     <Link className={buttonClass(variant, size, cn(arrow && "pr-2", className))} {...props}>
+      <LinkPending />
       {withArrow(children, arrow)}
     </Link>
   );

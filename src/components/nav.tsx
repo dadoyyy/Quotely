@@ -17,15 +17,20 @@ const items = [
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  // Highlight the clicked item immediately; it only counts until the page it was clicked on changes.
+  const [clicked, setClicked] = useState<{ href: string; from: string } | null>(null);
+  const target = clicked && clicked.from === pathname ? clicked.href : null;
   return (
     <nav className="flex flex-col gap-1" aria-label="Main">
       {items.map((item) => {
-        const active = item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`);
+        const active = target
+          ? item.href === target
+          : item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`);
         return (
           <Link
             key={item.href}
             href={item.href}
-            onClick={onNavigate}
+            onClick={() => { setClicked({ href: item.href, from: pathname }); onNavigate?.(); }}
             aria-current={active ? "page" : undefined}
             className={cn(
               "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium",

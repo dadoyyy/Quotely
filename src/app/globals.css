@@ -41,20 +41,22 @@
 
   --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --animate-enter: enter 0.45s var(--ease-smooth) both;
+  --animate-enter: enter 0.28s var(--ease-smooth) both;
   --animate-fade: fade 0.3s ease-out both;
   --animate-toast-in: toast-in 0.4s var(--ease-smooth) both;
   --animate-toast-out: toast-out 0.25s ease-in both;
   --animate-drawer: drawer 0.3s var(--ease-smooth) both;
   --animate-float: float 6s ease-in-out infinite;
   --animate-shrink: shrink linear forwards;
+  --animate-progress: progress 9s cubic-bezier(0.1, 0.6, 0.2, 1) forwards;
 
-  @keyframes enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
   @keyframes toast-in { from { opacity: 0; transform: translateY(-14px) scale(0.96); } to { opacity: 1; transform: none; } }
   @keyframes toast-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(24px) scale(0.96); } }
   @keyframes drawer { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes progress { from { width: 8%; } to { width: 88%; } }
   @keyframes shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 }
 
@@ -76,7 +78,7 @@ body {
 /* Smooth hover and focus feedback on everything interactive, without touching layout. */
 a, button, input, select, textarea, summary, label {
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
-  transition-duration: 180ms;
+  transition-duration: 150ms;
   transition-timing-function: var(--ease-smooth);
 }
 
@@ -94,4 +96,20 @@ a, button, input, select, textarea, summary, label {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Placeholder blocks that shimmer while data loads. */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-neutral-100) 25%, var(--color-neutral-50) 50%, var(--color-neutral-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* Scroll reveal: below-the-fold sections ease in once. Armed by a script, so with no JavaScript they just show. */
+.reveal-armed { opacity: 0; transform: translateY(28px); }
+.reveal-armed.reveal-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s ease-out, transform 0.8s var(--ease-smooth);
 }
