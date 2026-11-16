@@ -46,3 +46,64 @@ export interface CatalogItemRow {
   category: string | null;
   is_active: boolean;
 }
+
+export type QuoteStatus =
+  | "draft" | "sent" | "viewed" | "approved" | "rejected" | "changes_requested" | "expired" | "superseded" | "invoiced";
+
+export interface QuoteRow {
+  id: string;
+  org_id: string;
+  customer_id: string;
+  root_quote_id: string;
+  quote_number: string | null;
+  version: number;
+  status: QuoteStatus;
+  title: string;
+  scope: string | null;
+  terms: string | null;
+  notes: string | null;
+  issue_date: string | null;
+  valid_until: string | null;
+  vat_rate_bps: number;
+  customer_is_vat_exempt: boolean;
+  deposit_percent_bps: number;
+  discount_kind: "none" | "percent" | "fixed";
+  discount_value: number;
+  subtotal_cents: number;
+  discount_cents: number;
+  vat_cents: number;
+  total_cents: number;
+  deposit_cents: number;
+  sent_at: string | null;
+  responded_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface QuoteSectionRow {
+  id: string;
+  org_id: string;
+  quote_id: string;
+  position: number;
+  title: string;
+}
+
+export interface QuoteLineRow {
+  id: string;
+  org_id: string;
+  quote_id: string;
+  section_id: string | null;
+  position: number;
+  catalog_item_id: string | null;
+  name: string;
+  description: string | null;
+  kind: "service" | "material" | "labor" | "fee";
+  unit: "hour" | "day" | "sqm" | "lm" | "piece" | "head" | "set" | "lot";
+  quantity_milli: number;
+  unit_cost_cents: number;
+  markup_bps: number;
+  unit_price_override_cents: number | null;
+  unit_price_cents: number;
+  line_discount_bps: number;
+  is_taxable: boolean;
+}

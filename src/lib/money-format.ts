@@ -48,3 +48,23 @@ export function bpsToInput(bps: number): string {
 export function centsToInput(cents: number): string {
   return formatCents(cents).replace(/^(-?)₱/, "$1").replace(/,/g, "");
 }
+
+/** Largest quantity a line may have, in thousandths (100,000 units). Mirrors the pricing engine. */
+const MAX_QUANTITY_MILLI = 100_000_000;
+
+/** "2.5", "1,000", ".25" -> thousandths (2500, 1000000, 250). Positive, up to three decimals. */
+export function parseQuantityToMilli(input: string): number | null {
+  const s = input.trim().replace(/,/g, "");
+  if (!/^(\d+(\.\d{0,3})?|\.\d{1,3})$/.test(s)) return null;
+  const [whole = "", frac = ""] = s.split(".");
+  const milli = Number(whole || "0") * 1000 + Number(frac.padEnd(3, "0") || "0");
+  return Number.isSafeInteger(milli) && milli > 0 && milli <= MAX_QUANTITY_MILLI ? milli : null;
+}
+
+/** 2500 -> "2.5", 1000 -> "1", for pre-filling a quantity input. */
+export function milliToInput(milli: number): string {
+  if (!Number.isSafeInteger(milli) || milli < 0) throw new RangeError(`Not a valid quantity: ${milli}`);
+  const whole = Math.floor(milli / 1000);
+  const frac = String(milli % 1000).padStart(3, "0").replace(/0+$/, "");
+  return `${whole}${frac ? `.${frac}` : ""}`;
+}

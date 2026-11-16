@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Dashboard" };
 
-async function count(table: "customers" | "catalog_items") {
+async function count(table: "customers" | "catalog_items" | "quotes") {
   const supabase = await createClient();
   const { count } = await supabase.from(table).select("id", { count: "exact", head: true });
   return count ?? 0;
@@ -13,13 +13,13 @@ async function count(table: "customers" | "catalog_items") {
 
 export default async function DashboardPage() {
   const { org } = await requireContext();
-  const [customers, items] = await Promise.all([count("customers"), count("catalog_items")]);
+  const [customers, items, quotes] = await Promise.all([count("customers"), count("catalog_items"), count("quotes")]);
 
   const steps = [
     { done: true, label: "Create your business", href: "/app/settings", note: org.name },
     { done: customers > 0, label: "Add your customers", href: "/app/customers/new", note: `${customers} so far` },
     { done: items > 0, label: "Build your price list", href: "/app/catalog/new", note: `${items} items so far` },
-    { done: false, label: "Create your first quotation", href: "", note: "Coming next" },
+    { done: quotes > 0, label: "Create your first quotation", href: "/app/quotes/new", note: `${quotes} so far` },
   ];
 
   return (

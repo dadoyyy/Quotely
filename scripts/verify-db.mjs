@@ -17,7 +17,7 @@ try {
   const [{ n: migrations }] = await sql`select count(*)::int n from drizzle.__drizzle_migrations`;
   const fns = await sql`select proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and proname in ('is_org_member','can_write_org','is_org_owner','create_organization','next_quote_number','next_invoice_number') order by 1`;
 
-  const ok = tables === expected.tables && rls === expected.rls && migrations === 3 && fns.length === 6;
+  const ok = tables === expected.tables && rls === expected.rls && migrations === 4 && fns.length === 6;
   console.log({ tables, tablesWithRLS: rls, policies, migrationsApplied: migrations, functions: fns.map((f) => f.proname) });
   console.log(ok ? "OK: schema, row-level security and functions are all in place." : "NOT COMPLETE: run `npm run db:migrate` and try again.");
   process.exitCode = ok ? 0 : 1;

@@ -8,6 +8,16 @@ export class PricingError extends Error {
   }
 }
 
+/** Hard limits so no combination of valid-looking inputs can overflow a safe integer. */
+export const LIMITS = {
+  /** 100,000 units, in thousandths. */
+  maxQuantityMilli: 100_000_000,
+  /** PHP 100,000,000 per unit, in centavos. */
+  maxUnitCents: 10_000_000_000,
+  /** 10,000%. */
+  maxMarkupBps: 1_000_000,
+} as const;
+
 function int(name: string, v: number, max = Number.MAX_SAFE_INTEGER): void {
   if (!Number.isSafeInteger(v) || v < 0 || v > max) {
     throw new PricingError(`${name} must be an integer between 0 and ${max}, got ${v}`);
@@ -17,10 +27,10 @@ function int(name: string, v: number, max = Number.MAX_SAFE_INTEGER): void {
 function validate(input: PricingInput): void {
   input.lines.forEach((l, i) => {
     const at = `lines[${i}]`;
-    int(`${at}.quantityMilli`, l.quantityMilli);
-    int(`${at}.unitCostCents`, l.unitCostCents);
-    int(`${at}.markupBps`, l.markupBps);
-    if (l.unitPriceOverrideCents != null) int(`${at}.unitPriceOverrideCents`, l.unitPriceOverrideCents);
+    int(`${at}.quantityMilli`, l.quantityMilli, LIMITS.maxQuantityMilli);
+    int(`${at}.unitCostCents`, l.unitCostCents, LIMITS.maxUnitCents);
+    int(`${at}.markupBps`, l.markupBps, LIMITS.maxMarkupBps);
+    if (l.unitPriceOverrideCents != null) int(`${at}.unitPriceOverrideCents`, l.unitPriceOverrideCents, LIMITS.maxUnitCents);
     int(`${at}.lineDiscountBps`, l.lineDiscountBps, 10_000);
   });
   int("vatRateBps", input.vatRateBps, 10_000);
@@ -44,6 +54,25 @@ function validate(input: PricingInput): void {
  * 10. cost, margin    internal only
  */
 export function priceQuote(input: PricingInput): PricedQuote {
+  try {
+    return priceQuoteUnchecked(input);
+  } catch (e) {
+    if (e instanceof RangeError) throw new PricingError("Amounts are too large to calculate");
+    throw e;
+  }
+}
+
+/** A sum that refuses to silently lose precision. */
+function sum(values: number[]): number {
+  let acc = 0;
+  for (const v of values) {
+    acc += v;
+    if (!Number.isSafeInteger(acc)) throw new PricingError("Amounts are too large to calculate");
+  }
+  return acc;
+}
+
+function priceQuoteUnchecked(input: PricingInput): PricedQuote {
   validate(input);
 
   const base = input.lines.map((l) => {
@@ -61,7 +90,7 @@ export function priceQuote(input: PricingInput): PricedQuote {
     };
   });
 
-  const subtotalCents = base.reduce((acc, l) => acc + l.netCents, 0);
+  const subtotalCents = sum(base.map((l) => l.netCents));
 
   let discountCents = 0;
   if (input.quoteDiscount.kind === "percent") {
@@ -85,11 +114,11 @@ export function priceQuote(input: PricingInput): PricedQuote {
   });
 
   const discountedSubtotalCents = subtotalCents - discountCents;
-  const taxableBaseCents = lines.reduce((acc, l) => acc + l.taxableBaseCents, 0);
+  const taxableBaseCents = sum(lines.map((l) => l.taxableBaseCents));
   const vatCents = mulDivHalfUp(taxableBaseCents, input.vatRateBps, 10_000);
   const totalCents = discountedSubtotalCents + vatCents;
   const depositCents = mulDivHalfUp(totalCents, input.depositPercentBps, 10_000);
-  const costCents = lines.reduce((acc, l) => acc + l.costCents, 0);
+  const costCents = sum(lines.map((l) => l.costCents));
 
   return {
     lines,
