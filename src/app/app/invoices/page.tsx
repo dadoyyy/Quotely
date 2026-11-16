@@ -48,10 +48,10 @@ export default async function InvoicesPage() {
           </div>
           <Card className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500 dark:border-neutral-800">
+              <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
                 <tr><th className="p-3">Invoice</th><th className="p-3">Customer</th><th className="p-3">Due</th><th className="p-3 text-right">Total</th><th className="p-3">Status</th></tr>
               </thead>
-              <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
+              <tbody className="divide-y divide-neutral-200">
                 {rows.map((r) => {
                   const s = displayStatus(r, today);
                   return (

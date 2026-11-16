@@ -97,7 +97,7 @@ describe("quote builder", () => {
     expect(payload.discount).toEqual({ kind: "percent", bps: 500 });
     expect(JSON.stringify(payload)).not.toMatch(/total|subtotal/i);
     expect(await screen.findByText(/^Saved at/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled(); // nothing left to save
+    expect(await screen.findByRole("button", { name: "Save" })).toBeDisabled(); // nothing left to save
   });
 
   it("blocks the save and points at the bad field", async () => {
@@ -119,7 +119,7 @@ describe("quote builder", () => {
     await user.click(screen.getByRole("button", { name: "Save" }));
     expect(await screen.findByText(/already been sent/)).toBeInTheDocument();
     expect(screen.getByLabelText("Item name, line 1")).toHaveValue("Tilingx");
-    expect(screen.getByRole("button", { name: "Save" })).toBeEnabled();
+    expect(await screen.findByRole("button", { name: "Save" })).toBeEnabled();
   });
 
   it("fills a line from the price list when the name matches", async () => {

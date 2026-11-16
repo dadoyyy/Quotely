@@ -46,7 +46,7 @@ export function LineRow(p: Props) {
   const messages = errors ? Object.values(errors) : [];
 
   return (
-    <div className="rounded-md border border-neutral-200 p-2 dark:border-neutral-800">
+    <div className="rounded-xl border border-neutral-200 p-2">
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-[1fr_5rem_6.5rem_7.5rem_4.5rem_7rem]">
         <div className="col-span-2 sm:col-span-1">
           <input
@@ -112,21 +112,21 @@ export function LineRow(p: Props) {
         </div>
       </div>
 
-      {messages.length > 0 && <p role="alert" className="mt-1 text-xs text-red-600 dark:text-red-400">{messages.join(" · ")}</p>}
+      {messages.length > 0 && <p role="alert" className="mt-1 text-xs text-red-600">{messages.join(" · ")}</p>}
 
       <div className="mt-1 flex flex-wrap items-center gap-1 text-xs">
-        <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="rounded px-2 py-1 text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800">
+        <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="rounded px-2 py-1 text-neutral-600 hover:bg-neutral-100">
           {open ? "Hide details" : "Details"}
         </button>
-        <button type="button" onClick={() => p.onMove(-1)} disabled={!p.canMoveUp} aria-label={`Move line ${n} up`} className="rounded px-2 py-1 hover:bg-neutral-100 disabled:opacity-30 dark:hover:bg-neutral-800">↑</button>
-        <button type="button" onClick={() => p.onMove(1)} disabled={!p.canMoveDown} aria-label={`Move line ${n} down`} className="rounded px-2 py-1 hover:bg-neutral-100 disabled:opacity-30 dark:hover:bg-neutral-800">↓</button>
-        <button type="button" onClick={p.onDuplicate} className="rounded px-2 py-1 hover:bg-neutral-100 dark:hover:bg-neutral-800">Duplicate</button>
-        <button type="button" onClick={p.onRemove} aria-label={`Delete line ${n}`} className="rounded px-2 py-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-950">Delete</button>
+        <button type="button" onClick={() => p.onMove(-1)} disabled={!p.canMoveUp} aria-label={`Move line ${n} up`} className="rounded px-2 py-1 hover:bg-neutral-100 disabled:opacity-30">↑</button>
+        <button type="button" onClick={() => p.onMove(1)} disabled={!p.canMoveDown} aria-label={`Move line ${n} down`} className="rounded px-2 py-1 hover:bg-neutral-100 disabled:opacity-30">↓</button>
+        <button type="button" onClick={p.onDuplicate} className="rounded px-2 py-1 hover:bg-neutral-100">Duplicate</button>
+        <button type="button" onClick={p.onRemove} aria-label={`Delete line ${n}`} className="rounded px-2 py-1 text-red-600 hover:bg-red-50">Delete</button>
         {line.catalogItemId && <span className="ml-auto text-neutral-500">From price list</span>}
       </div>
 
       {open && (
-        <div className="mt-2 grid gap-3 border-t border-neutral-200 pt-3 text-sm sm:grid-cols-2 dark:border-neutral-800">
+        <div className="mt-2 grid gap-3 border-t border-neutral-200 pt-3 text-sm sm:grid-cols-2">
           <label className="space-y-1 sm:col-span-2">
             <span className="text-xs font-medium">Description (shown to the customer)</span>
             <textarea value={line.description} onChange={(e) => p.onChange({ description: e.target.value })} rows={2} maxLength={2000} className={controlClass} />
@@ -153,11 +153,11 @@ export function LineRow(p: Props) {
             <input inputMode="decimal" value={line.markup} aria-invalid={errors?.markup ? true : undefined} onChange={(e) => p.onChange({ markup: e.target.value })} className={cell(Boolean(errors?.markup))} />
           </label>
           <label className="flex items-center gap-2">
-            <input type="checkbox" checked={line.taxable} onChange={(e) => p.onChange({ taxable: e.target.checked })} className="h-4 w-4 accent-neutral-900 dark:accent-neutral-100" />
+            <input type="checkbox" checked={line.taxable} onChange={(e) => p.onChange({ taxable: e.target.checked })} className="h-4 w-4 accent-neutral-900" />
             <span>Charge VAT on this line</span>
           </label>
           {lineMargin !== null && (
-            <p className="text-xs text-amber-800 dark:text-amber-300" data-testid={`margin-${line.id}`}>
+            <p className="text-xs text-amber-800" data-testid={`margin-${line.id}`}>
               Internal margin on this line: {formatCents(lineMargin)}
             </p>
           )}

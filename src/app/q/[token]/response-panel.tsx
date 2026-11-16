@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { useToast } from "@/components/toast";
 import { buttonClass } from "@/components/ui/button";
 import { controlClass } from "@/components/ui/styles";
 import { cn } from "@/lib/cn";
@@ -18,10 +19,16 @@ export function ResponsePanel({ token, businessName }: { token: string; business
   const [mode, setMode] = useState<Mode>("approve");
   const [state, action, pending] = useActionState(respond.bind(null, token), {} as RespondState);
 
+  const toast = useToast();
+  useEffect(() => {
+    if (state.error) toast.error(state.error);
+    else if (state.ok) toast.success("Your response has been sent.");
+  }, [state, toast]);
+
   if (state.ok) {
     const done = { approved: "Thank you. You've approved this quote.", changes_requested: "Thanks. Your request has been sent.", rejected: "Thanks for letting us know. Your response has been sent." }[state.status ?? ""] ?? "Thank you. Your response has been recorded.";
     return (
-      <div role="status" className="rounded-lg border border-green-200 bg-green-50 p-5 text-sm text-green-900">
+      <div role="status" className="rounded-2xl border border-brand-200 bg-brand-50 p-5 text-sm text-brand-900">
         <p className="font-medium">{done}</p>
         <p className="mt-1">{businessName} has been notified.</p>
       </div>
@@ -29,7 +36,7 @@ export function ResponsePanel({ token, businessName }: { token: string; business
   }
 
   return (
-    <form action={action} className="space-y-4 rounded-lg border border-neutral-200 bg-white p-5 shadow-sm print:hidden">
+    <form action={action} className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm print:hidden">
       <h2 className="font-semibold">Your response</h2>
       <div role="tablist" aria-label="Response" className="flex flex-wrap gap-1">
         {(Object.keys(COPY) as Mode[]).map((m) => (
@@ -39,7 +46,7 @@ export function ResponsePanel({ token, businessName }: { token: string; business
             role="tab"
             aria-selected={mode === m}
             onClick={() => setMode(m)}
-            className={cn("rounded-md px-3 py-1.5 text-sm font-medium", mode === m ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200")}
+            className={cn("rounded-xl px-3 py-1.5 text-sm font-medium", mode === m ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200")}
           >
             {COPY[m].tab}
           </button>
@@ -75,7 +82,7 @@ export function ResponsePanel({ token, businessName }: { token: string; business
         </>
       )}
 
-      {state.error && <p role="alert" className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{state.error}</p>}
+      {state.error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{state.error}</p>}
       <button type="submit" disabled={pending} className={buttonClass(mode === "reject" ? "danger" : "primary")}>
         {pending ? COPY[mode].pending : COPY[mode].button}
       </button>

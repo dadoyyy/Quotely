@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { buttonClass } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useToast } from "@/components/toast";
 import { controlClass } from "@/components/ui/styles";
 import { cn } from "@/lib/cn";
 import { formatBps, formatCents } from "@/lib/money-format";
@@ -41,6 +42,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
   const [showErrors, setShowErrors] = useState(false);
   const [status, setStatus] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
   const [pending, startTransition] = useTransition();
+  const toast = useToast();
   const focusNext = useRef<{ id: string; col: Column } | null>(null);
 
   const built = useMemo(() => buildQuote(state), [state]);
@@ -129,6 +131,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
     setShowErrors(true);
     if (!built.payload) {
       setStatus({ kind: "error", text: "Fix the highlighted fields, then save." });
+      toast.error("Some fields need attention before this can be saved.");
       return;
     }
     const payload = built.payload;
@@ -140,14 +143,17 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
         if (r.ok) {
           setSavedJson(snapshot);
           setStatus({ kind: "ok", text: `Saved at ${new Date(r.savedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}` });
+          toast.success("Quote saved.");
         } else {
           setStatus({ kind: "error", text: r.error });
+          toast.error(r.error);
         }
       } catch {
         setStatus({ kind: "error", text: "Couldn't reach the server. Your changes are still here; try again." });
+        toast.error("Couldn't reach the server. Your changes are still here; try again.");
       }
     });
-  }, [pending, built.payload, json, quoteId]);
+  }, [pending, built.payload, json, quoteId, toast]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -178,7 +184,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
       <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Edit quote</h1>
-          <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">{quoteNumber ?? "Draft, not numbered yet"}</p>
+          <p className="mt-1 text-sm text-neutral-600">{quoteNumber ?? "Draft, not numbered yet"}</p>
         </div>
         <Link href={`/app/quotes/${quoteId}`} className={buttonClass("ghost")}>View quote</Link>
       </div>
@@ -305,7 +311,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between gap-2">
-                <label htmlFor="discount-kind" className="text-neutral-600 dark:text-neutral-400">Discount</label>
+                <label htmlFor="discount-kind" className="text-neutral-600">Discount</label>
                 <div className="flex items-center gap-1.5">
                   <select
                     id="discount-kind"
@@ -332,7 +338,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
             </div>
 
             <div className="flex items-center justify-between gap-2">
-              <label htmlFor="vat-rate" className="text-neutral-600 dark:text-neutral-400">VAT %</label>
+              <label htmlFor="vat-rate" className="text-neutral-600">VAT %</label>
               <input
                 id="vat-rate"
                 inputMode="decimal"
@@ -343,17 +349,17 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
             </div>
             {err("vatRate") && <p role="alert" className="text-xs text-red-600">{err("vatRate")}</p>}
             <label className="flex items-center gap-2">
-              <input type="checkbox" checked={h.vatExempt} onChange={(e) => setHeader({ vatExempt: e.target.checked })} className="h-4 w-4 accent-neutral-900 dark:accent-neutral-100" />
+              <input type="checkbox" checked={h.vatExempt} onChange={(e) => setHeader({ vatExempt: e.target.checked })} className="h-4 w-4 accent-neutral-900" />
               <span>Customer is VAT-exempt</span>
             </label>
             <Row label="VAT" value={money(priced?.vatCents)} />
 
-            <div className="border-t border-neutral-200 pt-3 dark:border-neutral-800">
+            <div className="border-t border-neutral-200 pt-3">
               <Row label="Total" value={money(priced?.totalCents)} strong />
             </div>
 
             <div className="flex items-center justify-between gap-2">
-              <label htmlFor="deposit" className="text-neutral-600 dark:text-neutral-400">Deposit %</label>
+              <label htmlFor="deposit" className="text-neutral-600">Deposit %</label>
               <input
                 id="deposit"
                 inputMode="decimal"
@@ -372,8 +378,8 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
             {built.pricingError && <p role="alert" className="text-xs text-red-600">{built.pricingError}</p>}
           </Card>
 
-          <Card className="border-amber-300 bg-amber-50 p-5 text-sm dark:border-amber-900 dark:bg-amber-950/40">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-amber-800 dark:text-amber-300">Internal · never shown to your customer</p>
+          <Card className="border-amber-300 bg-amber-50 p-5 text-sm">
+            <p className="mb-2 text-xs font-medium uppercase tracking-wide text-amber-800">Internal · never shown to your customer</p>
             <Row label="Your cost" value={money(priced?.costCents)} />
             <div className="mt-2">
               <Row
@@ -385,11 +391,11 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
         </aside>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-neutral-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-neutral-800 dark:bg-neutral-950/95">
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-neutral-200 bg-white/90 px-4 py-3 shadow-[0_-8px_24px_-16px_rgb(14_28_21/0.25)] backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
           <p
             role="status"
-            className={cn("text-sm", status?.kind === "error" ? "text-red-600 dark:text-red-400" : "text-neutral-600 dark:text-neutral-400")}
+            className={cn("text-sm", status?.kind === "error" ? "text-red-600" : "text-neutral-600")}
           >
             {status?.text ?? (dirty ? "Unsaved changes" : "All changes saved")}
           </p>
@@ -410,7 +416,7 @@ const money = (cents: number | undefined) => (cents === undefined ? "—" : form
 function Row({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
   return (
     <div className={cn("flex justify-between gap-4", strong && "text-base font-semibold")}>
-      <span className={strong ? "" : "text-neutral-600 dark:text-neutral-400"}>{label}</span>
+      <span className={strong ? "" : "text-neutral-600"}>{label}</span>
       <span className="tabular-nums">{value}</span>
     </div>
   );
@@ -421,7 +427,7 @@ function Labeled({ label, hint, error, children }: { label: string; hint?: strin
     <label className="block space-y-1.5">
       <span className="block text-sm font-medium">{label}</span>
       {children}
-      {error ? <span role="alert" className="block text-sm text-red-600 dark:text-red-400">{error}</span> : hint && <span className="block text-xs text-neutral-500 dark:text-neutral-400">{hint}</span>}
+      {error ? <span role="alert" className="block text-sm text-red-600">{error}</span> : hint && <span className="block text-xs text-neutral-500">{hint}</span>}
     </label>
   );
 }

@@ -43,7 +43,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
           }
         />
         {inv.status === "paid" && inv.paid_at && (
-          <p className="mb-4 text-sm text-neutral-600 dark:text-neutral-400">
+          <p className="mb-4 text-sm text-neutral-600">
             Paid {when(inv.paid_at)}{inv.paid_method ? ` by ${inv.paid_method}` : ""}{inv.paid_reference ? ` (ref ${inv.paid_reference})` : ""}.
           </p>
         )}
@@ -57,7 +57,7 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
               <div className="flex items-end"><SubmitButton pendingText="Saving…">Mark as paid</SubmitButton></div>
               <div className="sm:col-span-3"><FormMessage /></div>
             </ActionForm>
-            <ActionForm action={voidInvoice} className="border-t border-neutral-200 pt-3 dark:border-neutral-800">
+            <ActionForm action={voidInvoice} className="border-t border-neutral-200 pt-3">
               <input type="hidden" name="id" value={inv.id} />
               <FormMessage />
               <SubmitButton variant="danger" pendingText="Voiding…" confirm="Void this invoice? A voided invoice can't be reopened.">Void invoice</SubmitButton>

@@ -79,7 +79,7 @@ export default async function CatalogPage({
       ) : (
         <Card className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500 dark:border-neutral-800">
+            <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
               <tr>
                 <th className="px-4 py-3 font-medium">Item</th>
                 <th className="px-4 py-3 font-medium">Unit</th>
@@ -88,9 +88,9 @@ export default async function CatalogPage({
                 <th className="px-4 py-3 text-right font-medium">Price</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
+            <tbody className="divide-y divide-neutral-200">
               {items.map((i) => (
-                <tr key={i.id} className={`hover:bg-neutral-50 dark:hover:bg-neutral-800/50 ${i.is_active ? "" : "opacity-60"}`}>
+                <tr key={i.id} className={`hover:bg-neutral-50 ${i.is_active ? "" : "opacity-60"}`}>
                   <td className="px-4 py-3">
                     <Link href={`/app/catalog/${i.id}`} className="font-medium hover:underline">{i.name}</Link>
                     <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-neutral-500">
@@ -100,9 +100,9 @@ export default async function CatalogPage({
                       {!i.is_active && <Badge tone="red">Archived</Badge>}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">per {UNIT_LABELS[i.unit]}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-neutral-600 dark:text-neutral-400">{i.default_cost_cents ? formatCents(i.default_cost_cents) : "—"}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-neutral-600 dark:text-neutral-400">{i.default_markup_bps ? formatBps(i.default_markup_bps) : "—"}</td>
+                  <td className="px-4 py-3 text-neutral-600">per {UNIT_LABELS[i.unit]}</td>
+                  <td className="px-4 py-3 text-right tabular-nums text-neutral-600">{i.default_cost_cents ? formatCents(i.default_cost_cents) : "—"}</td>
+                  <td className="px-4 py-3 text-right tabular-nums text-neutral-600">{i.default_markup_bps ? formatBps(i.default_markup_bps) : "—"}</td>
                   <td className="px-4 py-3 text-right font-medium tabular-nums">{formatCents(i.default_price_cents)}</td>
                 </tr>
               ))}

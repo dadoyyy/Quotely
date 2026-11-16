@@ -1,4 +1,4 @@
-import { Nav } from "@/components/nav";
+import { AppShell } from "@/components/nav";
 import { Button } from "@/components/ui/button";
 import { requireContext } from "@/lib/auth";
 import { signOut } from "../(auth)/actions";
@@ -8,21 +8,25 @@ export const dynamic = "force-dynamic";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { org, user, role } = await requireContext();
+  const initial = (org.name.trim()[0] ?? "Q").toUpperCase();
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
-      <aside className="flex flex-col gap-4 print:hidden border-b border-neutral-200 p-4 md:w-60 md:shrink-0 md:border-b-0 md:border-r dark:border-neutral-800">
-        <div>
-          <p className="truncate text-sm font-semibold">{org.name}</p>
-          <p className="truncate text-xs text-neutral-500">{user.email} · {role}</p>
+    <AppShell
+      account={
+        <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-3 shadow-sm">
+          <span aria-hidden className="grid size-9 shrink-0 place-items-center rounded-full bg-neutral-900 text-sm font-semibold text-brand-400">{initial}</span>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-neutral-900">{org.name}</p>
+            <p className="truncate text-xs text-neutral-500">{user.email} · {role}</p>
+          </div>
         </div>
-        <Nav />
-        <form action={signOut} className="md:mt-auto">
+      }
+      footer={
+        <form action={signOut}>
           <Button type="submit" variant="ghost" size="sm" className="w-full justify-start">Sign out</Button>
         </form>
-      </aside>
-      <main className="min-w-0 flex-1 p-4 md:p-8 print:p-0">
-        <div className="mx-auto max-w-5xl">{children}</div>
-      </main>
-    </div>
+      }
+    >
+      {children}
+    </AppShell>
   );
 }

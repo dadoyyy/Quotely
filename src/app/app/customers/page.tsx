@@ -48,21 +48,21 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
       ) : (
         <Card className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500 dark:border-neutral-800">
+            <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
               <tr>
                 <th className="px-4 py-3 font-medium">Name</th>
                 <th className="px-4 py-3 font-medium">Contact</th>
                 <th className="px-4 py-3 font-medium">Tax</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
+            <tbody className="divide-y divide-neutral-200">
               {customers.map((c) => (
-                <tr key={c.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50">
+                <tr key={c.id} className="hover:bg-neutral-50">
                   <td className="px-4 py-3">
                     <Link href={`/app/customers/${c.id}`} className="font-medium hover:underline">{c.name}</Link>
                     {c.company && <div className="text-xs text-neutral-500">{c.company}</div>}
                   </td>
-                  <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                  <td className="px-4 py-3 text-neutral-600">
                     {c.email && <div>{c.email}</div>}
                     {c.phone && <div>{c.phone}</div>}
                   </td>

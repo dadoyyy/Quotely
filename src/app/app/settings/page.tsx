@@ -12,7 +12,7 @@ export default async function SettingsPage() {
     <>
       <PageHeader title="Settings" description="Your business details and the defaults new quotations start from." />
       {!isOwner && (
-        <p className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200">
+        <p className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
           Only the owner can change these.
         </p>
       )}
@@ -40,7 +40,7 @@ export default async function SettingsPage() {
               </Field>
             </section>
 
-            <section className="space-y-4 border-t border-neutral-200 pt-6 dark:border-neutral-800">
+            <section className="space-y-4 border-t border-neutral-200 pt-6">
               <h2 className="font-medium">Quotation defaults</h2>
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="VAT rate (%)" name="vatRateBps" hint="Applied to taxable lines. 12 in the Philippines." required>
@@ -61,7 +61,7 @@ export default async function SettingsPage() {
               </Field>
             </section>
 
-            <section className="space-y-4 border-t border-neutral-200 pt-6 dark:border-neutral-800">
+            <section className="space-y-4 border-t border-neutral-200 pt-6">
               <h2 className="font-medium">AI drafting</h2>
               <CheckboxInput
                 name="aiEnabled"

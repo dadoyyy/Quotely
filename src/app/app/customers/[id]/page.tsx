@@ -32,7 +32,7 @@ export default async function EditCustomerPage({ params }: { params: Promise<{ i
           </Card>
           <Card className="p-6">
             <h2 className="font-medium">Delete customer</h2>
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+            <p className="mt-1 text-sm text-neutral-600">
               This can&apos;t be undone. A customer who has quotes can&apos;t be deleted.
             </p>
             <ActionForm action={deleteCustomer} className="mt-4 space-y-3">

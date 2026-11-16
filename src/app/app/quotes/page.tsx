@@ -78,7 +78,7 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
               key={c.label}
               href={chipHref(c.status)}
               aria-current={active ? "true" : undefined}
-              className={`rounded-full border px-3 py-1 text-xs font-medium ${active ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"}`}
+              className={`rounded-full border px-3 py-1 text-xs font-medium ${active ? "border-neutral-900 bg-neutral-900 text-white" : "border-neutral-300 text-neutral-700 hover:bg-neutral-100"}`}
             >
               {c.label} <span className="opacity-70">{c.count}</span>
             </Link>
@@ -105,7 +105,7 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
       ) : (
         <Card className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500 dark:border-neutral-800">
+            <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
               <tr>
                 <th className="px-4 py-3 font-medium">Quote</th>
                 <th className="px-4 py-3 font-medium">Customer</th>
@@ -114,9 +114,9 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
                 <th className="px-4 py-3 font-medium">Valid until</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
+            <tbody className="divide-y divide-neutral-200">
               {quotes.map((x) => (
-                <tr key={x.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800/50">
+                <tr key={x.id} className="hover:bg-neutral-50">
                   <td className="px-4 py-3">
                     <Link href={`/app/quotes/${x.id}`} className="font-medium hover:underline">{x.title || "Untitled"}</Link>
                     <div className="text-xs text-neutral-500">{x.quote_number ?? "Not numbered yet"}{x.version > 1 && ` · v${x.version}`}</div>
@@ -124,7 +124,7 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
                   <td className="px-4 py-3">{names.get(x.customer_id) ?? "—"}</td>
                   <td className="px-4 py-3"><Badge tone={STATUS_TONES[x.status]}>{STATUS_LABELS[x.status]}</Badge></td>
                   <td className="px-4 py-3 text-right tabular-nums">{formatCents(x.total_cents)}</td>
-                  <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{x.valid_until ?? "—"}</td>
+                  <td className="px-4 py-3 text-neutral-600">{x.valid_until ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

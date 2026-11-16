@@ -37,7 +37,7 @@ export default async function EditCatalogItemPage({ params }: { params: Promise<
           <Card className="space-y-6 p-6">
             <div>
               <h2 className="font-medium">{item.is_active ? "Archive" : "Restore"}</h2>
-              <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+              <p className="mt-1 text-sm text-neutral-600">
                 {item.is_active
                   ? "Hides this item from new quotations. Quotations that already use it are not affected."
                   : "Makes this item available for new quotations again."}
@@ -49,9 +49,9 @@ export default async function EditCatalogItemPage({ params }: { params: Promise<
                 <SubmitButton variant="secondary" pendingText="Saving…">{item.is_active ? "Archive item" : "Restore item"}</SubmitButton>
               </ActionForm>
             </div>
-            <div className="border-t border-neutral-200 pt-6 dark:border-neutral-800">
+            <div className="border-t border-neutral-200 pt-6">
               <h2 className="font-medium">Delete item</h2>
-              <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+              <p className="mt-1 text-sm text-neutral-600">
                 This can&apos;t be undone. Archiving is usually better.
               </p>
               <ActionForm action={deleteCatalogItem} className="mt-3 space-y-3">

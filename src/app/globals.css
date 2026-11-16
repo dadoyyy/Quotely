@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Theme: deep forest ink, lime accent, soft green-white surfaces.
+ * The neutral scale is re-tinted here so every existing `neutral-*` class picks up the new look.
+ * The app is light-only: `dark:` utilities only apply under an explicit `.dark` class, which is never set.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-neutral-50: #f6faf2;
+  --color-neutral-100: #edf4e7;
+  --color-neutral-200: #dde8d4;
+  --color-neutral-300: #c3d2b7;
+  --color-neutral-400: #93a48a;
+  --color-neutral-500: #65775f;
+  --color-neutral-600: #4b5c47;
+  --color-neutral-700: #364434;
+  --color-neutral-800: #1f2d25;
+  --color-neutral-900: #0e1c15;
+  --color-neutral-950: #07120c;
+
+  --color-brand-50: #f5fbe8;
+  --color-brand-100: #e8f6c9;
+  --color-brand-200: #d3ee9d;
+  --color-brand-300: #bae26d;
+  --color-brand-400: #a2d44a;
+  --color-brand-500: #86bb2a;
+  --color-brand-600: #6a9a1c;
+  --color-brand-700: #527818;
+  --color-brand-800: #425f19;
+  --color-brand-900: #384f19;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-card: 1rem;
+  --shadow-soft: 0 1px 2px rgb(14 28 21 / 0.04), 0 8px 24px -14px rgb(14 28 21 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(14 28 21 / 0.05), 0 18px 36px -16px rgb(14 28 21 / 0.28);
+  --shadow-glow: 0 8px 24px -8px rgb(134 187 42 / 0.55);
+
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-enter: enter 0.45s var(--ease-smooth) both;
+  --animate-fade: fade 0.3s ease-out both;
+  --animate-toast-in: toast-in 0.4s var(--ease-smooth) both;
+  --animate-toast-out: toast-out 0.25s ease-in both;
+  --animate-drawer: drawer 0.3s var(--ease-smooth) both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-shrink: shrink linear forwards;
+
+  @keyframes enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(-14px) scale(0.96); } to { opacity: 1; transform: none; } }
+  @keyframes toast-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(24px) scale(0.96); } }
+  @keyframes drawer { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html { color-scheme: light; scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-neutral-900);
+  background:
+    radial-gradient(900px 480px at 100% -8%, rgb(162 212 74 / 0.16), transparent 62%),
+    radial-gradient(700px 420px at -8% 4%, rgb(162 212 74 / 0.10), transparent 60%),
+    #fbfdf8;
+  background-attachment: fixed;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--color-brand-200); color: var(--color-neutral-900); }
+
+/* Smooth hover and focus feedback on everything interactive, without touching layout. */
+a, button, input, select, textarea, summary, label {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: 180ms;
+  transition-timing-function: var(--ease-smooth);
+}
+
+/* A neat scrollbar for the wide tables. */
+* { scrollbar-width: thin; scrollbar-color: var(--color-neutral-300) transparent; }
+
+@media print {
+  body { background: #fff !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

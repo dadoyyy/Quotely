@@ -15,7 +15,7 @@ export function QuoteDocument({ snapshot: s, invoice, stamp }: { snapshot: Quote
   const t = s.totals;
 
   return (
-    <article className="rounded-lg border border-neutral-200 bg-white p-6 text-sm text-neutral-900 shadow-sm sm:p-10 print:border-0 print:p-0 print:shadow-none" style={{ borderTop: `4px solid ${brand}` }}>
+    <article className="rounded-2xl border border-neutral-200 bg-white p-6 text-sm text-neutral-900 shadow-sm sm:p-10 print:border-0 print:p-0 print:shadow-none" style={{ borderTop: `4px solid ${brand}` }}>
       <header className="flex flex-wrap items-start justify-between gap-6">
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}

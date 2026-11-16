@@ -86,7 +86,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
           {quote.scope && (
             <Card className="p-5 text-sm">
               <h2 className="mb-1 font-medium">Scope of work</h2>
-              <p className="whitespace-pre-wrap text-neutral-700 dark:text-neutral-300">{quote.scope}</p>
+              <p className="whitespace-pre-wrap text-neutral-700">{quote.scope}</p>
             </Card>
           )}
 
@@ -95,7 +95,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
               <p className="p-5 text-sm text-neutral-500">No items yet.{isDraft && canWrite && <> <Link href={`/app/quotes/${id}/edit`} className="underline">Add some</Link>.</>}</p>
             ) : (
               <table className="w-full text-left text-sm">
-                <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500 dark:border-neutral-800">
+                <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
                   <tr>
                     <th className="px-4 py-3 font-medium">Item</th>
                     <th className="px-4 py-3 text-right font-medium">Qty</th>
@@ -104,9 +104,9 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
                   </tr>
                 </thead>
                 {groups.map((g) => (
-                  <tbody key={g.section?.id ?? "loose"} className="divide-y divide-neutral-200 border-b border-neutral-200 last:border-b-0 dark:divide-neutral-800 dark:border-neutral-800">
+                  <tbody key={g.section?.id ?? "loose"} className="divide-y divide-neutral-200 border-b border-neutral-200 last:border-b-0">
                     {g.section && (
-                      <tr className="bg-neutral-50 dark:bg-neutral-800/50"><th colSpan={4} className="px-4 py-2 text-left font-semibold">{g.section.title || "Untitled section"}</th></tr>
+                      <tr className="bg-neutral-50"><th colSpan={4} className="px-4 py-2 text-left font-semibold">{g.section.title || "Untitled section"}</th></tr>
                     )}
                     {g.lines.map((l) => {
                       const p = pricedById.get(l.id)!;
@@ -136,7 +136,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
           {quote.terms && (
             <Card className="p-5 text-sm">
               <h2 className="mb-1 font-medium">Terms</h2>
-              <p className="whitespace-pre-wrap text-neutral-700 dark:text-neutral-300">{quote.terms}</p>
+              <p className="whitespace-pre-wrap text-neutral-700">{quote.terms}</p>
             </Card>
           )}
         </div>
@@ -147,7 +147,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
               <Row label="Subtotal" value={formatCents(priced.subtotalCents)} />
               {priced.discountCents > 0 && <Row label="Discount" value={`−${formatCents(priced.discountCents)}`} />}
               <Row label={`VAT ${formatBps(quote.vat_rate_bps)}${quote.customer_is_vat_exempt ? " (exempt)" : ""}`} value={formatCents(priced.vatCents)} />
-              <div className="border-t border-neutral-200 pt-2 dark:border-neutral-800"><Row label="Total" value={formatCents(priced.totalCents)} strong /></div>
+              <div className="border-t border-neutral-200 pt-2"><Row label="Total" value={formatCents(priced.totalCents)} strong /></div>
               {quote.deposit_percent_bps > 0 && (
                 <>
                   <Row label={`Deposit ${formatBps(quote.deposit_percent_bps)}`} value={formatCents(priced.depositCents)} />
@@ -158,8 +158,8 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
           </Card>
 
           {showMargin && (
-            <Card className="border-amber-300 bg-amber-50 p-5 text-sm dark:border-amber-900 dark:bg-amber-950/40">
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-amber-800 dark:text-amber-300">Internal · never shown to your customer</p>
+            <Card className="border-amber-300 bg-amber-50 p-5 text-sm">
+              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-amber-800">Internal · never shown to your customer</p>
               <dl className="space-y-2">
                 <Row label="Your cost" value={formatCents(priced.costCents)} />
                 <Row label="Margin" value={`${formatCents(priced.marginCents)} · ${formatBps(Math.abs(marginBps(priced)))}${marginBps(priced) < 0 ? " below cost" : ""}`} />
@@ -170,7 +170,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
           {canRevise && (
             <Card className="p-5 text-sm">
               <h2 className="font-medium">Revise this quote</h2>
-              <p className="mt-1 text-neutral-600 dark:text-neutral-400">
+              <p className="mt-1 text-neutral-600">
                 Makes a copy as version {quote.version + 1} that you can edit. This version stays as it is, and is replaced only when you send the new one.
               </p>
               <ActionForm action={createQuoteRevision} className="mt-3 space-y-3">
@@ -205,7 +205,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
           {canWrite && quote.status === "approved" && !invoiceRow && (
             <Card className="p-5">
               <h2 className="font-medium">Invoice this quote</h2>
-              <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">The customer approved it. The invoice copies exactly what they approved.</p>
+              <p className="mt-1 text-sm text-neutral-600">The customer approved it. The invoice copies exactly what they approved.</p>
               <ActionForm action={createInvoice} className="mt-3 space-y-3">
                 <input type="hidden" name="quoteId" value={quote.id} />
                 <Field label="Due date" name="dueDate" hint="Leave blank for 14 days from today."><TextInput name="dueDate" type="date" min={todayIn(org.timezone)} defaultValue={addDays(todayIn(org.timezone), 14)} /></Field>
@@ -224,7 +224,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
                 {timeline.map((t) => (
                   <li key={t.key}>
                     <p className="font-medium">{t.title}</p>
-                    {t.body && <p className="mt-0.5 whitespace-pre-wrap text-neutral-600 dark:text-neutral-400">&ldquo;{t.body}&rdquo;</p>}
+                    {t.body && <p className="mt-0.5 whitespace-pre-wrap text-neutral-600">&ldquo;{t.body}&rdquo;</p>}
                     <p className="text-xs text-neutral-500">{new Date(t.at).toLocaleString("en-PH", { dateStyle: "medium", timeStyle: "short", timeZone: org.timezone })}</p>
                   </li>
                 ))}
@@ -235,7 +235,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
           {isDraft && canWrite && (
             <Card className="p-5">
               <h2 className="font-medium">Delete draft</h2>
-              <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">Only drafts can be deleted. This can&apos;t be undone.</p>
+              <p className="mt-1 text-sm text-neutral-600">Only drafts can be deleted. This can&apos;t be undone.</p>
               <ActionForm action={deleteDraftQuote} className="mt-3 space-y-3">
                 <input type="hidden" name="id" value={quote.id} />
                 <FormMessage />
@@ -252,7 +252,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
 function Row({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
   return (
     <div className={`flex justify-between gap-4 ${strong ? "text-base font-semibold" : ""}`}>
-      <dt className={strong ? "" : "text-neutral-600 dark:text-neutral-400"}>{label}</dt>
+      <dt className={strong ? "" : "text-neutral-600"}>{label}</dt>
       <dd className="tabular-nums">{value}</dd>
     </div>
   );

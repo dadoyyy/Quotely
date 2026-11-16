@@ -68,19 +68,19 @@ export default async function DashboardPage() {
 
       <h2 className="mb-2 mt-8 font-medium">Needs your attention</h2>
       {attention.length === 0 ? (
-        <Card className="p-5 text-sm text-neutral-600 dark:text-neutral-400">
+        <Card className="p-5 text-sm text-neutral-600">
           {quotes.length === 0 ? "Once you send quotes, anything that needs a follow-up shows up here." : "Nothing needs following up right now."}
         </Card>
       ) : (
-        <Card className="divide-y divide-neutral-200 dark:divide-neutral-800">
+        <Card className="divide-y divide-neutral-200">
           {attention.map((a) => (
             <div key={a.quote.id} className="flex flex-wrap items-center justify-between gap-2 p-4 text-sm">
               <div className="min-w-0">
                 <Link href={`/app/quotes/${a.quote.id}`} className="font-medium hover:underline">{a.quote.title || "Untitled"}</Link>
-                <p className="text-neutral-600 dark:text-neutral-400">
+                <p className="text-neutral-600">
                   {names.get(a.quote.customer_id) ?? "—"} · {formatCents(a.quote.total_cents)}
                 </p>
-                <p className={a.severity === "high" ? "text-red-700 dark:text-red-400" : "text-neutral-600 dark:text-neutral-400"}>{a.reason}</p>
+                <p className={a.severity === "high" ? "text-red-700" : "text-neutral-600"}>{a.reason}</p>
               </div>
               <Badge tone={STATUS_TONES[a.quote.status]}>{STATUS_LABELS[a.quote.status]}</Badge>
             </div>
@@ -91,7 +91,7 @@ export default async function DashboardPage() {
       {!setupDone && (
         <>
           <h2 className="mb-2 mt-8 font-medium">Getting started</h2>
-          <Card className="divide-y divide-neutral-200 dark:divide-neutral-800">
+          <Card className="divide-y divide-neutral-200">
             {[
               { done: true, label: "Create your business", href: "/app/settings", note: org.name },
               { done: customers > 0, label: "Add your customers", href: "/app/customers/new", note: `${customers} so far` },
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
             ].map((s) => (
               <div key={s.label} className="flex items-center justify-between gap-4 p-4">
                 <div className="flex items-center gap-3">
-                  <span aria-hidden className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${s.done ? "bg-green-600 text-white" : "border border-neutral-300 text-neutral-400 dark:border-neutral-700"}`}>{s.done ? "✓" : ""}</span>
+                  <span aria-hidden className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${s.done ? "bg-green-600 text-white" : "border border-neutral-300 text-neutral-400"}`}>{s.done ? "✓" : ""}</span>
                   <Link href={s.href} className="font-medium hover:underline">{s.label}</Link>
                 </div>
                 <span className="text-sm text-neutral-500">{s.note}</span>

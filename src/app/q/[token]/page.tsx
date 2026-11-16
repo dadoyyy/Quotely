@@ -17,12 +17,12 @@ export const dynamic = "force-dynamic";
 
 function Notice({ tone, children }: { tone: "green" | "red" | "amber" | "neutral"; children: React.ReactNode }) {
   const tones = {
-    green: "border-green-200 bg-green-50 text-green-900",
+    green: "border-brand-200 bg-brand-50 text-brand-900",
     red: "border-red-200 bg-red-50 text-red-900",
     amber: "border-amber-200 bg-amber-50 text-amber-900",
     neutral: "border-neutral-200 bg-neutral-50 text-neutral-800",
   };
-  return <div role="status" className={`rounded-lg border p-4 text-sm print:hidden ${tones[tone]}`}>{children}</div>;
+  return <div role="status" className={`rounded-2xl border p-4 text-sm print:hidden ${tones[tone]}`}>{children}</div>;
 }
 
 export default async function PublicQuotePage({ params }: { params: Promise<{ token: string }> }) {

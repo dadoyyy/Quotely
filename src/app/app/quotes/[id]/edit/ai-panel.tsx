@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { buttonClass } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useToast } from "@/components/toast";
 import { controlClass } from "@/components/ui/styles";
 import type { AiMatch } from "@/lib/ai/types";
 import type { CatalogItemRow } from "@/lib/rows";
@@ -42,6 +43,7 @@ export function AiPanel({ quoteId, catalog, onAdd }: Props) {
   const [result, setResult] = useState<AiDraftState | null>(null);
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [busy, startTransition] = useTransition();
+  const toast = useToast();
   const fileInput = useRef<HTMLInputElement>(null);
   const byId = new Map(catalog.map((c) => [c.id, c]));
 
@@ -53,6 +55,9 @@ export function AiPanel({ quoteId, catalog, onAdd }: Props) {
       for (const p of photos) fd.append("photos", await shrink(p));
       const out = await draftFromDescription({}, fd);
       setResult(out);
+      if (out.error) toast.error(out.error);
+      else if (!out.matches?.length) toast.info("Nothing in your price list matched.");
+      else toast.success(`${out.matches.length} suggestion${out.matches.length === 1 ? "" : "s"} ready to review.`);
       setChecked(new Set((out.matches ?? []).map((m) => m.itemId)));
     });
   };
@@ -73,6 +78,7 @@ export function AiPanel({ quoteId, catalog, onAdd }: Props) {
     }
     if (!picks.length) return;
     onAdd(picks);
+    toast.success(`Added ${picks.length} item${picks.length === 1 ? "" : "s"} to the quote.`);
     if (result?.draftId) void markAiDraftAccepted(result.draftId);
     setResult(null);
     setDescription("");
@@ -83,7 +89,7 @@ export function AiPanel({ quoteId, catalog, onAdd }: Props) {
   if (!open) {
     return (
       <Card className="flex items-center justify-between gap-3 p-4">
-        <p className="text-sm text-neutral-600 dark:text-neutral-400">Describe the job and get suggested items from your price list.</p>
+        <p className="text-sm text-neutral-600">Describe the job and get suggested items from your price list.</p>
         <button type="button" className={buttonClass("secondary")} onClick={() => setOpen(true)}>Draft with AI</button>
       </Card>
     );
@@ -135,7 +141,7 @@ export function AiPanel({ quoteId, catalog, onAdd }: Props) {
           {matches.length === 0 ? (
             <p className="text-sm text-neutral-600">Nothing in your price list matched. You can add items by hand.</p>
           ) : (
-            <ul className="divide-y divide-neutral-200 rounded-md border border-neutral-200 dark:divide-neutral-800 dark:border-neutral-800">
+            <ul className="divide-y divide-neutral-200 rounded-xl border border-neutral-200">
               {matches.map((m) => {
                 const item = byId.get(m.itemId);
                 if (!item) return null;
