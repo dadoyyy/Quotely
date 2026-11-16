@@ -391,7 +391,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
         </aside>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t lg:left-64 border-neutral-200 bg-white/90 px-4 py-3 shadow-[0_-8px_24px_-16px_rgb(14_28_21/0.25)] backdrop-blur-md">
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t pb-[env(safe-area-inset-bottom)] lg:left-64 border-neutral-200 bg-white/90 px-4 py-3 shadow-[0_-8px_24px_-16px_rgb(14_28_21/0.25)] backdrop-blur-md">
         <div className="flex items-center justify-between gap-3">
           <p
             role="status"

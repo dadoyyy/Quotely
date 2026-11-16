@@ -7,6 +7,7 @@ import { formatCents } from "@/lib/money-format";
 import { resolvePrice } from "@/lib/pricing/catalog-price";
 import { SAMPLE_CATALOGS } from "@/lib/seed/catalogs";
 import { UNIT_LABELS } from "@/lib/constants";
+import { InstallApp } from "@/components/install-app";
 import { AiArt, ApproveArt, BandArt, HeroArt, InvoiceArt, PriceListArt } from "./art";
 import { BuilderMock, PhoneMock } from "./mocks";
 import { RevealOnScroll } from "./reveal";
@@ -176,6 +177,7 @@ export function Landing() {
               <div className="flex flex-wrap gap-3 pt-1">
                 <ButtonLink href="/signup" size="lg" arrow>Get started</ButtonLink>
                 <ButtonLink href="/demo" variant="secondary" size="lg" arrow>See the demo</ButtonLink>
+                <InstallApp variant="ghost" size="lg" className="w-auto [&_button]:w-auto" />
               </div>
               <ul className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-sm text-neutral-600">
                 {["No account needed for customers", "Prices never come from AI", "Works on any phone"].map((t) => (

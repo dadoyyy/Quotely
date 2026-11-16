@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { Logo } from "@/components/logo";
+import { InstallApp } from "@/components/install-app";
 import { cn } from "@/lib/cn";
 
 const items = [
@@ -85,6 +86,7 @@ export function AppShell({ account, footer, children }: { account: ReactNode; fo
         <Link href="/app" className="px-1"><Logo /></Link>
         <NavLinks />
         <div className="mt-auto space-y-3">
+          <InstallApp />
           {account}
           {footer}
         </div>
@@ -112,6 +114,7 @@ export function AppShell({ account, footer, children }: { account: ReactNode; fo
           <div id="mobile-menu" className="relative flex max-h-full animate-drawer flex-col gap-5 overflow-y-auto border-b border-neutral-200 bg-white p-4 shadow-lift">
             <NavLinks onNavigate={() => setOpen(false)} />
             <div className="space-y-3 border-t border-neutral-200 pt-4">
+              <InstallApp />
               {account}
               {footer}
             </div>
