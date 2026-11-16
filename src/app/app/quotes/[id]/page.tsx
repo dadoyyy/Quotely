@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ActionForm, FormMessage, SubmitButton } from "@/components/form";
+import { ActionForm, Field, FormMessage, SubmitButton, TextInput } from "@/components/form";
 import { ButtonLink } from "@/components/ui/button";
 import { Badge, Card, PageHeader } from "@/components/ui/card";
 import { requireContext } from "@/lib/auth";
@@ -14,6 +14,8 @@ import { buildTimeline, type TimelineComment, type TimelineEvent } from "@/lib/q
 import { isUuid } from "@/lib/search";
 import { createClient } from "@/lib/supabase/server";
 import { createQuoteRevision, deleteDraftQuote } from "../actions";
+import { createInvoice } from "../../invoices/actions";
+import { addDays, todayIn } from "@/lib/quotes/model";
 import { emailConfigured } from "@/lib/email";
 import { SharePanel } from "./share-panel";
 
@@ -51,6 +53,9 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
   const rowById = new Map(lines.map((l) => [l.id, l]));
   const groups = groupLines(state);
   const isDraft = quote.status === "draft";
+  const { data: invoiceRow } = ["approved", "invoiced"].includes(quote.status)
+    ? await supabase.from("invoices").select("id, invoice_number").eq("quote_id", quote.id).maybeSingle()
+    : { data: null };
   const showMargin = role !== "viewer";
 
   return (
@@ -187,6 +192,26 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
                   </li>
                 ))}
               </ul>
+            </Card>
+          )}
+
+          {invoiceRow && (
+            <Card className="p-5 text-sm">
+              <h2 className="font-medium">Invoice</h2>
+              <p className="mt-1"><Link href={`/app/invoices/${invoiceRow.id}`} className="underline">{invoiceRow.invoice_number}</Link></p>
+            </Card>
+          )}
+
+          {canWrite && quote.status === "approved" && !invoiceRow && (
+            <Card className="p-5">
+              <h2 className="font-medium">Invoice this quote</h2>
+              <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">The customer approved it. The invoice copies exactly what they approved.</p>
+              <ActionForm action={createInvoice} className="mt-3 space-y-3">
+                <input type="hidden" name="quoteId" value={quote.id} />
+                <Field label="Due date" name="dueDate" hint="Leave blank for 14 days from today."><TextInput name="dueDate" type="date" min={todayIn(org.timezone)} defaultValue={addDays(todayIn(org.timezone), 14)} /></Field>
+                <FormMessage />
+                <SubmitButton pendingText="Creating…">Create invoice</SubmitButton>
+              </ActionForm>
             </Card>
           )}
 

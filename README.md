@@ -63,4 +63,5 @@ suite against an in-process Postgres (PGlite).
 - [x] Phase 3 (PDF render service still to do): send, immutable snapshot, private link, public approval page, print view, activity timeline
 - [x] Phase 4: revisions (versioned, superseded on send), expiry sweep, dashboard with follow-ups, status filters, daily staff digest
 - [x] Phase 5: AI drafting (text + photos to price-list items; AI never sets prices; daily cap; every draft logged)
-- [ ] Phases 6 and 7: invoices and CSV export, portfolio layer
+- [x] Phase 6: invoices from approved quotes (frozen copy, numbered, record payment, void, overdue), CSV export of quotes, invoices and customers
+- [ ] Phase 7: portfolio layer (seeded catalogs, public demo, landing page)

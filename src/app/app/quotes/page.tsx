@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge, Card, EmptyState, PageHeader } from "@/components/ui/card";
-import { ButtonLink, buttonClass } from "@/components/ui/button";
+import { ButtonLink, DownloadLink, buttonClass } from "@/components/ui/button";
 import { controlClass } from "@/components/ui/styles";
 import { requireContext } from "@/lib/auth";
 import { formatCents } from "@/lib/money-format";
@@ -62,7 +62,12 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
       <PageHeader
         title="Quotes"
         description="Every quotation you've written."
-        actions={canWrite && <ButtonLink href="/app/quotes/new">New quote</ButtonLink>}
+        actions={
+          <>
+            <DownloadLink href="/app/export/quotes">Export CSV</DownloadLink>
+            {canWrite && <ButtonLink href="/app/quotes/new">New quote</ButtonLink>}
+          </>
+        }
       />
 
       <nav aria-label="Filter by status" className="mb-3 flex flex-wrap gap-1.5">

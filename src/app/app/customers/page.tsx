@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge, Card, EmptyState, PageHeader } from "@/components/ui/card";
-import { ButtonLink, buttonClass } from "@/components/ui/button";
+import { ButtonLink, DownloadLink, buttonClass } from "@/components/ui/button";
 import { controlClass } from "@/components/ui/styles";
 import { requireContext } from "@/lib/auth";
 import type { CustomerRow } from "@/lib/rows";
@@ -25,7 +25,12 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
       <PageHeader
         title="Customers"
         description="The people and companies you quote."
-        actions={canWrite && <ButtonLink href="/app/customers/new">Add customer</ButtonLink>}
+        actions={
+          <>
+            <DownloadLink href="/app/export/customers">Export CSV</DownloadLink>
+            {canWrite && <ButtonLink href="/app/customers/new">Add customer</ButtonLink>}
+          </>
+        }
       />
 
       <form className="mb-4 flex gap-2" role="search">

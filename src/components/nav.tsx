@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 const items = [
   { href: "/app", label: "Dashboard", exact: true },
   { href: "/app/quotes", label: "Quotes" },
+  { href: "/app/invoices", label: "Invoices" },
   { href: "/app/customers", label: "Customers" },
   { href: "/app/catalog", label: "Price list" },
   { href: "/app/settings", label: "Settings" },

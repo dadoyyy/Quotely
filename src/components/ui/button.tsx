@@ -45,3 +45,8 @@ export function ButtonLink({
 }: ComponentProps<typeof Link> & { variant?: Variant; size?: Size }) {
   return <Link className={buttonClass(variant, size, className)} {...props} />;
 }
+
+/** A link that downloads a file. It is not a page, so a plain anchor is right (no client-side navigation). */
+export function DownloadLink({ className, ...props }: ComponentProps<"a">) {
+  return <a className={buttonClass("secondary", "md", className)} {...props} />;
+}

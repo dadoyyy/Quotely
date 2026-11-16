@@ -1,10 +1,11 @@
 import { UNIT_LABELS } from "@/lib/constants";
 import { formatBps, formatCents, milliToInput } from "@/lib/money-format";
 import { safeBrandColor } from "@/lib/quotes/share";
+import type { InvoiceInfo } from "@/lib/invoices";
 import type { QuoteSnapshot } from "@/lib/quotes/snapshot";
 
 /** What the customer sees and prints. Renders the stored snapshot only: never live rows, never cost. */
-export function QuoteDocument({ snapshot: s }: { snapshot: QuoteSnapshot }) {
+export function QuoteDocument({ snapshot: s, invoice, stamp }: { snapshot: QuoteSnapshot; invoice?: InvoiceInfo | null; stamp?: string | null }) {
   const brand = safeBrandColor(s.business.brandColor);
   const loose = s.lines.filter((l) => !l.sectionId || !s.sections.some((x) => x.id === l.sectionId));
   const groups = [
@@ -28,18 +29,29 @@ export function QuoteDocument({ snapshot: s }: { snapshot: QuoteSnapshot }) {
           </div>
         </div>
         <div className="text-right">
-          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">Quotation</p>
-          <p className="text-lg font-semibold">{s.quote.number ?? "—"}</p>
-          {s.quote.revision > 1 && <p className="text-neutral-500">Revision {s.quote.revision}</p>}
-          <dl className="mt-2 space-y-0.5 text-neutral-600">
-            {s.quote.issueDate && <div>Issued {s.quote.issueDate}</div>}
-            {s.quote.validUntil && <div>Valid until {s.quote.validUntil}</div>}
-          </dl>
+          <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">{invoice ? "Invoice" : "Quotation"}</p>
+          <p className="text-lg font-semibold">{invoice ? invoice.number : (s.quote.number ?? "—")}</p>
+          {invoice ? (
+            <dl className="mt-2 space-y-0.5 text-neutral-600">
+              <div>Issued {invoice.issueDate}</div>
+              {invoice.dueDate && <div>Due {invoice.dueDate}</div>}
+              {s.quote.number && <div>For quotation {s.quote.number}</div>}
+            </dl>
+          ) : (
+            <>
+              {s.quote.revision > 1 && <p className="text-neutral-500">Revision {s.quote.revision}</p>}
+              <dl className="mt-2 space-y-0.5 text-neutral-600">
+                {s.quote.issueDate && <div>Issued {s.quote.issueDate}</div>}
+                {s.quote.validUntil && <div>Valid until {s.quote.validUntil}</div>}
+              </dl>
+            </>
+          )}
+          {stamp && <p className="mt-2 inline-block rounded border-2 border-current px-2 py-0.5 text-sm font-bold uppercase tracking-widest text-neutral-700">{stamp}</p>}
         </div>
       </header>
 
       <section className="mt-8">
-        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">Prepared for</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-neutral-500">{invoice ? "Bill to" : "Prepared for"}</p>
         <p className="mt-1 font-medium">{s.customer.name}</p>
         <div className="text-neutral-600">
           {s.customer.company && <p>{s.customer.company}</p>}

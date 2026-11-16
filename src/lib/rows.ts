@@ -107,3 +107,20 @@ export interface QuoteLineRow {
   line_discount_bps: number;
   is_taxable: boolean;
 }
+
+export interface InvoiceRow {
+  id: string;
+  org_id: string;
+  quote_id: string;
+  invoice_number: string;
+  issue_date: string;
+  due_date: string | null;
+  status: "unpaid" | "paid" | "void";
+  paid_at: string | null;
+  paid_method: string | null;
+  paid_reference: string | null;
+  voided_at: string | null;
+  total_cents: number;
+  document_snapshot: unknown;
+  created_at: string;
+}

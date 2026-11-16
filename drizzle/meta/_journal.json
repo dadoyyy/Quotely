@@ -43,6 +43,13 @@
       "when": 1794807720716,
       "tag": "0005_lifecycle",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794810255764,
+      "tag": "0006_invoices",
+      "breakpoints": true
     }
   ]
 }
