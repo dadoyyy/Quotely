@@ -36,7 +36,8 @@ export async function signUp(_prev: FormState, fd: FormData): Promise<FormState>
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
-    ...parsed.data,
+    email: parsed.data.email,
+    password: parsed.data.password,
     options: { emailRedirectTo: `${publicEnv().NEXT_PUBLIC_APP_URL}/auth/callback` },
   });
   if (error) {

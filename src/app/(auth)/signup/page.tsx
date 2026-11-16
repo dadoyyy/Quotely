@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AuthCard } from "@/components/auth-card";
 import { ActionForm, Field, FormMessage, IconInput, SubmitButton } from "@/components/form";
+import { PasswordFields } from "@/components/password-fields";
 import { signUp } from "../actions";
 
 export const metadata = { title: "Create account" };
@@ -17,9 +18,7 @@ export default function SignupPage() {
         <Field label="Email" name="email" required>
           <IconInput icon="mail" placeholder="you@business.com" name="email" type="email" autoComplete="email" required />
         </Field>
-        <Field label="Password" name="password" hint="At least 8 characters." required>
-          <IconInput icon="lock" placeholder="••••••••" name="password" type="password" autoComplete="new-password" minLength={8} required />
-        </Field>
+        <PasswordFields />
         <FormMessage />
         <SubmitButton pendingText="Creating account…" className="w-full">Create account</SubmitButton>
       </ActionForm>

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import * as schema from "../../db/schema";
 import { CATALOG_KINDS, UNITS } from "../constants";
+import { signupSchema } from "./auth";
 import { catalogItemSchema } from "./catalog";
 import { customerSchema } from "./customer";
 import { parseForm } from "./form";
@@ -91,5 +92,32 @@ describe("settingsSchema", () => {
     const r = parseForm(settingsSchema, form({ ...ok, vatRateBps: "120", defaultValidityDays: "0", quoteNumberPrefix: "too long prefix!" }));
     expect(r.ok).toBe(false);
     if (!r.ok) expect(Object.keys(r.fieldErrors).sort()).toEqual(["defaultValidityDays", "quoteNumberPrefix", "vatRateBps"]);
+  });
+});
+
+describe("signupSchema password rules", () => {
+  const ok = { email: "a@b.co", password: "Str0ng!pass", confirmPassword: "Str0ng!pass" };
+  const msg = (v: object) => {
+    const r = signupSchema.safeParse(v);
+    return r.success ? null : Object.fromEntries(r.error.issues.map((i) => [String(i.path[0]), i.message]));
+  };
+  it("accepts a password meeting every rule when confirmed", () => {
+    expect(signupSchema.safeParse(ok).success).toBe(true);
+  });
+  it.each([
+    ["Sh0rt!", "8 characters"],
+    ["alllowercase1!", "uppercase"],
+    ["ALLUPPERCASE1!", "lowercase"],
+    ["NoNumbers!!", "number"],
+    ["NoSymbol123", "symbol"],
+  ])("rejects %s", (password, word) => {
+    const e = msg({ ...ok, password, confirmPassword: password });
+    expect(e?.password).toContain(word);
+  });
+  it("rejects a confirmation that differs", () => {
+    expect(msg({ ...ok, confirmPassword: "Str0ng!pasS" })?.confirmPassword).toBe("Passwords don't match");
+  });
+  it("rejects a missing confirmation", () => {
+    expect(msg({ email: ok.email, password: ok.password })?.confirmPassword).toBeDefined();
   });
 });
