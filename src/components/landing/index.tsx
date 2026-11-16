@@ -188,7 +188,7 @@ export function Landing() {
 
           {/* ---------------------------------------------------------- who for */}
           <section aria-label="Who it is for" className="reveal overflow-hidden border-b border-neutral-200/60 bg-neutral-900 py-7 text-white">
-            <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">Made for businesses that quote by the job</p>
+            <p className="mb-5 px-5 text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-neutral-500 sm:text-xs sm:tracking-[0.18em]">Made for businesses that quote by the job</p>
             <div className="[mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]">
               <ul className="fx-marquee flex w-max items-center gap-14 pr-14">
                 {[...INDUSTRIES, ...INDUSTRIES, ...INDUSTRIES, ...INDUSTRIES].map((i, k) => (
@@ -282,9 +282,9 @@ export function Landing() {
           {/* ---------------------------------------------------------- industries */}
           <section className="reveal bg-white"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">
             <SectionHead eyebrow="Start fast" title="Start from a ready-made price list" sub="Pick one when you sign up, then change the prices to yours." />
-            <div className="mt-12 grid gap-4 lg:grid-cols-3">
+            <div className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-3">
               {industries.map((c) => (
-                <article key={c.id} className="flex flex-col rounded-3xl border border-neutral-200/80 bg-brand-50/60 p-6">
+                <article key={c.id} className="flex min-w-0 flex-col rounded-3xl border border-neutral-200/80 bg-brand-50/60 p-6">
                   <h3 className="text-lg font-semibold">{c.label}</h3>
                   <p className="mt-1 text-sm text-neutral-600">{c.blurb}</p>
                   <ul className="mt-5 flex-1 space-y-2">

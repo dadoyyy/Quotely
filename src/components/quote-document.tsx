@@ -65,7 +65,7 @@ export function QuoteDocument({ snapshot: s, invoice, stamp }: { snapshot: Quote
       {s.quote.scope && <p className="mt-2 whitespace-pre-wrap text-neutral-700">{s.quote.scope}</p>}
 
       <div className="mt-6 overflow-x-auto">
-        <table className="w-full text-left">
+        <table className="stack-table w-full text-left">
           <thead className="border-b-2 text-xs uppercase tracking-wide text-neutral-500" style={{ borderColor: brand }}>
             <tr>
               <th className="py-2 pr-3 font-medium">Item</th>
@@ -86,9 +86,9 @@ export function QuoteDocument({ snapshot: s, invoice, stamp }: { snapshot: Quote
                     {l.description && <div className="whitespace-pre-line text-xs text-neutral-500">{l.description}</div>}
                     {!l.isTaxable && !t.customerIsVatExempt && <div className="text-xs text-neutral-500">Not subject to VAT</div>}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3 text-right tabular-nums">{milliToInput(l.quantityMilli)} {UNIT_LABELS[l.unit]}</td>
-                  <td className="whitespace-nowrap px-3 py-3 text-right tabular-nums">{formatCents(l.unitPriceCents)}</td>
-                  <td className="whitespace-nowrap py-3 pl-3 text-right tabular-nums">
+                  <td data-label="Qty" className="whitespace-nowrap px-3 py-3 text-right tabular-nums">{milliToInput(l.quantityMilli)} {UNIT_LABELS[l.unit]}</td>
+                  <td data-label="Unit price" className="whitespace-nowrap px-3 py-3 text-right tabular-nums">{formatCents(l.unitPriceCents)}</td>
+                  <td data-label="Amount" className="whitespace-nowrap py-3 pl-3 text-right tabular-nums">
                     {formatCents(l.netCents)}
                     {l.lineDiscountBps > 0 && <div className="text-xs text-neutral-500">after {formatBps(l.lineDiscountBps)} discount</div>}
                   </td>

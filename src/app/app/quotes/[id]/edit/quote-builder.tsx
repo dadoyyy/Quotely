@@ -391,7 +391,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
         </aside>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-10 border-t border-neutral-200 bg-white/90 px-4 py-3 shadow-[0_-8px_24px_-16px_rgb(14_28_21/0.25)] backdrop-blur-md">
+      <div className="fixed inset-x-0 bottom-0 z-10 border-t lg:left-64 border-neutral-200 bg-white/90 px-4 py-3 shadow-[0_-8px_24px_-16px_rgb(14_28_21/0.25)] backdrop-blur-md">
         <div className="flex items-center justify-between gap-3">
           <p
             role="status"
@@ -400,7 +400,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
             {status?.text ?? (dirty ? "Unsaved changes" : "All changes saved")}
           </p>
           <div className="flex items-center gap-2">
-            {priced && <span className="hidden text-sm font-medium tabular-nums sm:inline">Total {formatCents(priced.totalCents)}</span>}
+            {priced && <span className="text-sm font-semibold tabular-nums">{formatCents(priced.totalCents)}</span>}
             <button type="button" onClick={save} disabled={pending || !dirty} className={buttonClass("primary")}>
               {pending ? "Saving…" : "Save"}
             </button>

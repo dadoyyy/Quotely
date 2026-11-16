@@ -111,6 +111,19 @@ main table thead th { font-weight: 600; letter-spacing: 0.06em; color: var(--col
 main table tbody tr { transition: background-color 150ms var(--ease-smooth); }
 main table tbody tr:hover { background: rgb(162 212 74 / 0.09); }
 
+/* Phones: list tables become stacked cards so nothing needs sideways scrolling. */
+@media screen and (max-width: 639px) {
+  .stack-table, .stack-table tbody, .stack-table tr, .stack-table td, .stack-table th { display: block; width: 100%; }
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .stack-table tr { padding: 0.85rem 1rem; }
+  .stack-table tr:has(> th[colspan]) { padding: 0; }
+  .stack-table th[colspan] { padding: 0.5rem 1rem !important; }
+  .stack-table td { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.2rem 0 !important; text-align: right; white-space: normal !important; }
+  .stack-table td:first-child { display: block; padding: 0 0 0.35rem !important; text-align: left; font-size: 0.95rem; }
+  .stack-table td[data-label]::before { content: attr(data-label); flex-shrink: 0; text-align: left; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-neutral-500); }
+  .stack-table tbody { border-top: 0; }
+}
+
 /* Edge draws its own reveal button in password fields; ours replaces it. */
 input::-ms-reveal, input::-ms-clear { display: none; }
 

@@ -78,7 +78,7 @@ export default async function CatalogPage({
         </EmptyState>
       ) : (
         <Card className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="stack-table w-full text-left text-sm">
             <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
               <tr>
                 <th className="px-4 py-3 font-medium">Item</th>
@@ -100,10 +100,10 @@ export default async function CatalogPage({
                       {!i.is_active && <Badge tone="red">Archived</Badge>}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-neutral-600">per {UNIT_LABELS[i.unit]}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-neutral-600">{i.default_cost_cents ? formatCents(i.default_cost_cents) : "—"}</td>
-                  <td className="px-4 py-3 text-right tabular-nums text-neutral-600">{i.default_markup_bps ? formatBps(i.default_markup_bps) : "—"}</td>
-                  <td className="px-4 py-3 text-right font-medium tabular-nums">{formatCents(i.default_price_cents)}</td>
+                  <td data-label="Unit" className="px-4 py-3 text-neutral-600">per {UNIT_LABELS[i.unit]}</td>
+                  <td data-label="Cost" className="px-4 py-3 text-right tabular-nums text-neutral-600">{i.default_cost_cents ? formatCents(i.default_cost_cents) : "—"}</td>
+                  <td data-label="Markup" className="px-4 py-3 text-right tabular-nums text-neutral-600">{i.default_markup_bps ? formatBps(i.default_markup_bps) : "—"}</td>
+                  <td data-label="Price" className="px-4 py-3 text-right font-medium tabular-nums">{formatCents(i.default_price_cents)}</td>
                 </tr>
               ))}
             </tbody>

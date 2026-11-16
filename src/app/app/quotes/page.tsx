@@ -104,7 +104,7 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
         </EmptyState>
       ) : (
         <Card className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="stack-table w-full text-left text-sm">
             <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
               <tr>
                 <th className="px-4 py-3 font-medium">Quote</th>
@@ -121,10 +121,10 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
                     <Link href={`/app/quotes/${x.id}`} className="font-medium hover:underline">{x.title || "Untitled"}</Link>
                     <div className="text-xs text-neutral-500">{x.quote_number ?? "Not numbered yet"}{x.version > 1 && ` · v${x.version}`}</div>
                   </td>
-                  <td className="px-4 py-3">{names.get(x.customer_id) ?? "—"}</td>
-                  <td className="px-4 py-3"><Badge tone={STATUS_TONES[x.status]}>{STATUS_LABELS[x.status]}</Badge></td>
-                  <td className="px-4 py-3 text-right tabular-nums">{formatCents(x.total_cents)}</td>
-                  <td className="px-4 py-3 text-neutral-600">{x.valid_until ?? "—"}</td>
+                  <td data-label="Customer" className="px-4 py-3">{names.get(x.customer_id) ?? "—"}</td>
+                  <td data-label="Status" className="px-4 py-3"><Badge tone={STATUS_TONES[x.status]}>{STATUS_LABELS[x.status]}</Badge></td>
+                  <td data-label="Total" className="px-4 py-3 text-right tabular-nums">{formatCents(x.total_cents)}</td>
+                  <td data-label="Valid until" className="px-4 py-3 text-neutral-600">{x.valid_until ?? "—"}</td>
                 </tr>
               ))}
             </tbody>

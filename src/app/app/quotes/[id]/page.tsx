@@ -94,7 +94,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
             {lines.length === 0 ? (
               <p className="p-5 text-sm text-neutral-500">No items yet.{isDraft && canWrite && <> <Link href={`/app/quotes/${id}/edit`} className="underline">Add some</Link>.</>}</p>
             ) : (
-              <table className="w-full text-left text-sm">
+              <table className="stack-table w-full text-left text-sm">
                 <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
                   <tr>
                     <th className="px-4 py-3 font-medium">Item</th>
@@ -118,9 +118,9 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
                             {l.description && <div className="text-xs text-neutral-500">{l.description}</div>}
                             {!row.is_taxable && <div className="text-xs text-neutral-500">No VAT</div>}
                           </td>
-                          <td className="px-4 py-3 text-right tabular-nums">{milliToInput(row.quantity_milli)} {UNIT_LABELS[row.unit]}</td>
-                          <td className="px-4 py-3 text-right tabular-nums">{formatCents(p.unitPriceCents)}</td>
-                          <td className="px-4 py-3 text-right tabular-nums">
+                          <td data-label="Qty" className="px-4 py-3 text-right tabular-nums">{milliToInput(row.quantity_milli)} {UNIT_LABELS[row.unit]}</td>
+                          <td data-label="Unit price" className="px-4 py-3 text-right tabular-nums">{formatCents(p.unitPriceCents)}</td>
+                          <td data-label="Amount" className="px-4 py-3 text-right tabular-nums">
                             {formatCents(p.netCents)}
                             {p.lineDiscountCents > 0 && <div className="text-xs text-neutral-500">−{formatBps(row.line_discount_bps)}</div>}
                           </td>

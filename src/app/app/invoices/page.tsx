@@ -47,7 +47,7 @@ export default async function InvoicesPage() {
             <Card className="p-4"><p className="text-xs text-neutral-500">Overdue</p><p className="text-xl font-semibold tabular-nums">{formatCents(Number(overdue))}</p></Card>
           </div>
           <Card className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
+            <table className="stack-table w-full text-left text-sm">
               <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
                 <tr><th className="p-3">Invoice</th><th className="p-3">Customer</th><th className="p-3">Due</th><th className="p-3 text-right">Total</th><th className="p-3">Status</th></tr>
               </thead>
@@ -57,10 +57,10 @@ export default async function InvoicesPage() {
                   return (
                     <tr key={r.id}>
                       <td className="p-3 font-medium"><Link href={`/app/invoices/${r.id}`} className="hover:underline">{r.invoice_number}</Link></td>
-                      <td className="p-3">{r.customer ?? "—"}</td>
-                      <td className="p-3">{r.due_date ?? "—"}</td>
-                      <td className="p-3 text-right tabular-nums">{formatCents(r.total_cents)}</td>
-                      <td className="p-3"><Badge tone={INVOICE_TONES[s]}>{INVOICE_LABELS[s]}</Badge></td>
+                      <td data-label="Customer" className="p-3">{r.customer ?? "—"}</td>
+                      <td data-label="Due" className="p-3">{r.due_date ?? "—"}</td>
+                      <td data-label="Total" className="p-3 text-right tabular-nums">{formatCents(r.total_cents)}</td>
+                      <td data-label="Status" className="p-3"><Badge tone={INVOICE_TONES[s]}>{INVOICE_LABELS[s]}</Badge></td>
                     </tr>
                   );
                 })}

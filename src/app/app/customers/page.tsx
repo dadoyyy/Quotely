@@ -47,7 +47,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
         </EmptyState>
       ) : (
         <Card className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="stack-table w-full text-left text-sm">
             <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
               <tr>
                 <th className="px-4 py-3 font-medium">Name</th>
@@ -62,11 +62,11 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
                     <Link href={`/app/customers/${c.id}`} className="font-medium hover:underline">{c.name}</Link>
                     {c.company && <div className="text-xs text-neutral-500">{c.company}</div>}
                   </td>
-                  <td className="px-4 py-3 text-neutral-600">
+                  <td data-label="Contact" className="px-4 py-3 text-neutral-600">
                     {c.email && <div>{c.email}</div>}
                     {c.phone && <div>{c.phone}</div>}
                   </td>
-                  <td className="px-4 py-3">{c.is_vat_exempt ? <Badge tone="amber">VAT-exempt</Badge> : <span className="text-neutral-400">—</span>}</td>
+                  <td data-label="Tax" className="px-4 py-3">{c.is_vat_exempt ? <Badge tone="amber">VAT-exempt</Badge> : <span className="text-neutral-400">—</span>}</td>
                 </tr>
               ))}
             </tbody>

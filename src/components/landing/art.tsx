@@ -81,7 +81,7 @@ export function HeroArt({ className }: { className?: string }) {
         </span>
         Customer approved
       </div>
-      <div className="fx-float-b absolute bottom-[0%] left-[38%] rounded-2xl bg-neutral-900 px-3.5 py-2 text-white shadow-lift">
+      <div className="fx-float-b absolute bottom-[0%] left-[38%] hidden rounded-2xl sm:block bg-neutral-900 px-3.5 py-2 text-white shadow-lift">
         <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400">Deposit received</p>
         <p className="text-sm font-semibold tabular-nums text-brand-400">₱25,993.92</p>
       </div>

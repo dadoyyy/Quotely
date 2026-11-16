@@ -65,7 +65,7 @@ export default function DemoPage() {
         <h2 className="flex items-center gap-3 text-xl font-semibold sm:text-2xl"><span className="grid size-8 place-items-center rounded-full bg-brand-400 text-sm font-bold text-neutral-900">2</span>What only you see</h2>
         <p className="text-sm text-neutral-600">Cost, markup and margin stay private. They are never part of what the customer receives.</p>
         <Card className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="stack-table w-full text-left text-sm">
             <thead className="border-b border-neutral-200 text-xs uppercase tracking-wide text-neutral-500">
               <tr><th className="p-3">Item</th><th className="p-3 text-right">Your cost</th><th className="p-3 text-right">Markup</th><th className="p-3 text-right">Customer pays</th></tr>
             </thead>
@@ -73,9 +73,9 @@ export default function DemoPage() {
               {internal.map((l) => (
                 <tr key={l.id}>
                   <td className="p-3">{l.name}</td>
-                  <td className="p-3 text-right tabular-nums">{formatCents(l.costCents)}</td>
-                  <td className="p-3 text-right tabular-nums">{formatBps(l.markupBps)}</td>
-                  <td className="p-3 text-right tabular-nums">{formatCents(l.netCents)}</td>
+                  <td data-label="Your cost" className="p-3 text-right tabular-nums">{formatCents(l.costCents)}</td>
+                  <td data-label="Markup" className="p-3 text-right tabular-nums">{formatBps(l.markupBps)}</td>
+                  <td data-label="Customer pays" className="p-3 text-right tabular-nums">{formatCents(l.netCents)}</td>
                 </tr>
               ))}
             </tbody>
