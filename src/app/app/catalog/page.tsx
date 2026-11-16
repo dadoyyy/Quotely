@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { Badge, Card, EmptyState, PageHeader } from "@/components/ui/card";
 import { ButtonLink, buttonClass } from "@/components/ui/button";
+import { ActionForm, FormMessage, SelectInput, SubmitButton } from "@/components/form";
+import { SAMPLE_CATALOGS } from "@/lib/seed/catalogs";
+import { importSampleCatalog } from "./actions";
 import { controlClass } from "@/components/ui/styles";
 import { requireContext } from "@/lib/auth";
 import { KIND_LABELS, UNIT_LABELS } from "@/lib/constants";
@@ -62,6 +65,16 @@ export default async function CatalogPage({
       ) : items.length === 0 ? (
         <EmptyState title={filtered ? "Nothing matches those filters" : "Your price list is empty"}>
           {!filtered && (canWrite ? <>Add the things you charge for, like labor, materials and fixed fees.</> : <>Ask the owner to add items.</>)}
+          {!filtered && canWrite && (
+            <ActionForm action={importSampleCatalog} className="mx-auto mt-4 flex max-w-md flex-col items-center gap-3">
+              <p>Or start from a sample and change the prices to yours:</p>
+              <SelectInput name="sample" aria-label="Sample price list">
+                {SAMPLE_CATALOGS.map((c) => <option key={c.id} value={c.id}>{c.label} ({c.items.length} items)</option>)}
+              </SelectInput>
+              <FormMessage />
+              <SubmitButton variant="secondary" pendingText="Adding…">Add sample items</SubmitButton>
+            </ActionForm>
+          )}
         </EmptyState>
       ) : (
         <Card className="overflow-x-auto">

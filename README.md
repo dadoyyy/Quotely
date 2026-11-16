@@ -5,6 +5,25 @@ price catalog, send it as a link, let the customer approve or decline, and turn 
 an invoice. Next.js (App Router) + Supabase Postgres + Drizzle. AI drafts line items from text or photos
 but never produces a number.
 
+## Try it
+
+- **No setup:** the landing page links to `/demo`, a read-only tour built from a sample renovation price list
+  and the real pricing engine. It uses no database.
+- **With your own data:** sign up, then on an empty price list pick a sample (home renovation, event
+  organizer or aircon repair) and change the prices to yours.
+
+## What it does
+
+1. **Build** a quotation from your price list: sections, per-line discounts, VAT, a quote-level discount,
+   deposit, live totals, and a private margin view.
+2. **Draft with AI:** describe the job or attach photos; Gemini picks items from *your* list. It never
+   writes a price, quantities come only from what the customer stated, and every draft is logged.
+3. **Send** a private link (optionally by email). The customer approves, declines or asks for changes
+   without an account. The sent document is frozen and hash-checked.
+4. **Revise** with versions: the old one is superseded only when the new one is sent.
+5. **Invoice** an approved quote (a frozen copy), record payment, void; overdue is flagged.
+6. **Export** quotes, invoices and customers to CSV (spreadsheet-formula safe).
+
 ## Run it
 
 ```bash
@@ -30,6 +49,18 @@ suite against an in-process Postgres (PGlite).
 4. **Cost never reaches the customer.** One serializer builds the public view (Phase 3).
 5. **AI touches words and references, never prices.** Output is validated against the org's own catalog (Phase 5).
 
+## Decisions worth knowing
+
+- **Security lives in the database, not only the app.** Row-level security and triggers enforce tenancy,
+  the quote state machine, frozen snapshots and immutable invoices, so a bug in a page can't break them.
+  `tests/` runs the real migrations on Postgres (PGlite) to prove it.
+- **The public link is a secret.** Only its SHA-256 hash is stored; the customer page runs through
+  narrow service-role functions, ignores bot previews, and never serializes cost, markup or margin.
+- **AI is a typist, not an accountant.** The model sees item names, not prices, and can only reference
+  items by key. Output is validated and anything unknown is dropped, so a hallucination can't reach a quote.
+- **Not done yet:** server-rendered PDF download (browser print-to-PDF works), automatic customer
+  reminders, Google sign-in.
+
 ## Layout
 
 | Path | What |
@@ -43,6 +74,9 @@ suite against an in-process Postgres (PGlite).
 | `tests/quote-builder.test.ts` | Atomic draft save, draft-only delete, cross-tenant references |
 | `tests/lifecycle.test.ts` | Revisions, superseding on send, expiry sweep |
 | `tests/send-quote.test.ts` | Sending freezes a quote; the customer's view, approve, decline and request-changes rules |
+| `tests/invoices.test.ts` | Invoicing an approved quote, payments, immutability |
+| `src/lib/ai/` | Prompt, Gemini client, output validation and catalog matching |
+| `src/lib/seed/`, `src/lib/demo/` | Sample price lists and the demo fixture |
 | `src/lib/supabase/` | Browser, server (session-bound) and admin (service role, server-only) clients |
 
 ## Keys, and when each is needed
@@ -64,4 +98,4 @@ suite against an in-process Postgres (PGlite).
 - [x] Phase 4: revisions (versioned, superseded on send), expiry sweep, dashboard with follow-ups, status filters, daily staff digest
 - [x] Phase 5: AI drafting (text + photos to price-list items; AI never sets prices; daily cap; every draft logged)
 - [x] Phase 6: invoices from approved quotes (frozen copy, numbered, record payment, void, overdue), CSV export of quotes, invoices and customers
-- [ ] Phase 7: portfolio layer (seeded catalogs, public demo, landing page)
+- [x] Phase 7: portfolio layer (sample price lists for three industries, public demo at `/demo`, landing page)
