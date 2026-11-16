@@ -41,6 +41,7 @@ suite against an in-process Postgres (PGlite).
 | `drizzle/0001_rls.sql` | Hand-written: RLS policies, numbering, freeze and state-machine triggers |
 | `tests/rls.test.ts` | The Phase 0 gate: isolation, roles, frozen quotes, numbering |
 | `tests/quote-builder.test.ts` | Atomic draft save, draft-only delete, cross-tenant references |
+| `tests/send-quote.test.ts` | Sending freezes a quote; the customer's view, approve, decline and request-changes rules |
 | `src/lib/supabase/` | Browser, server (session-bound) and admin (service role, server-only) clients |
 
 ## Keys, and when each is needed
@@ -58,5 +59,5 @@ suite against an in-process Postgres (PGlite).
 - [x] Phase 0: schema, RLS, triggers, pricing engine, tests
 - [x] Phase 1: sign-up and login, onboarding, customers, price list, settings
 - [x] Phase 2: quote builder (atomic draft save, live totals, private margin, sections, keyboard entry)
-- [ ] Phase 3: send, snapshot, PDF, public approval page
+- [x] Phase 3 (PDF render service still to do): send, immutable snapshot, private link, public approval page, print view, activity timeline
 - [ ] Phases 4 to 7: lifecycle, AI, invoices, portfolio layer

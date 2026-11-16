@@ -10,27 +10,32 @@ import { marginBps, priceQuote } from "@/lib/pricing/engine";
 import { groupLines, stateFromRows, rowsToPricingInput } from "@/lib/quotes/model";
 import { STATUS_LABELS, STATUS_TONES } from "@/lib/quotes/status";
 import type { CustomerRow, QuoteLineRow, QuoteRow, QuoteSectionRow } from "@/lib/rows";
+import { buildTimeline, type TimelineComment, type TimelineEvent } from "@/lib/quotes/timeline";
 import { isUuid } from "@/lib/search";
 import { createClient } from "@/lib/supabase/server";
 import { deleteDraftQuote } from "../actions";
+import { SharePanel } from "./share-panel";
 
 export const metadata = { title: "Quote" };
 
 export default async function QuotePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!isUuid(id)) notFound();
-  const { canWrite, role } = await requireContext();
+  const { canWrite, role, org } = await requireContext();
 
   const supabase = await createClient();
   const { data } = await supabase.from("quotes").select("*").eq("id", id).maybeSingle();
   if (!data) notFound();
   const quote = data as QuoteRow;
 
-  const [sectionsRes, linesRes, customerRes] = await Promise.all([
+  const [sectionsRes, linesRes, customerRes, eventsRes, commentsRes] = await Promise.all([
     supabase.from("quote_sections").select("*").eq("quote_id", id),
     supabase.from("quote_lines").select("*").eq("quote_id", id),
     supabase.from("customers").select("*").eq("id", quote.customer_id).maybeSingle(),
+    supabase.from("quote_events").select("id, type, actor_type, actor_label, created_at").eq("quote_id", id),
+    supabase.from("quote_comments").select("id, author_label, body, created_at").eq("quote_id", id),
   ]);
+  const timeline = buildTimeline((eventsRes.data ?? []) as TimelineEvent[], (commentsRes.data ?? []) as TimelineComment[]);
   const sections = (sectionsRes.data ?? []) as QuoteSectionRow[];
   const lines = (linesRes.data ?? []) as QuoteLineRow[];
   const customer = customerRes.data as CustomerRow | null;
@@ -149,6 +154,23 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
                 <Row label="Your cost" value={formatCents(priced.costCents)} />
                 <Row label="Margin" value={`${formatCents(priced.marginCents)} · ${formatBps(Math.abs(marginBps(priced)))}${marginBps(priced) < 0 ? " below cost" : ""}`} />
               </dl>
+            </Card>
+          )}
+
+          {canWrite && <SharePanel quoteId={quote.id} mode={isDraft ? "send" : "renew"} />}
+
+          {timeline.length > 0 && (
+            <Card className="p-5 text-sm">
+              <h2 className="mb-3 font-medium">Activity</h2>
+              <ol className="space-y-3">
+                {timeline.map((t) => (
+                  <li key={t.key}>
+                    <p className="font-medium">{t.title}</p>
+                    {t.body && <p className="mt-0.5 whitespace-pre-wrap text-neutral-600 dark:text-neutral-400">&ldquo;{t.body}&rdquo;</p>}
+                    <p className="text-xs text-neutral-500">{new Date(t.at).toLocaleString("en-PH", { dateStyle: "medium", timeStyle: "short", timeZone: org.timezone })}</p>
+                  </li>
+                ))}
+              </ol>
             </Card>
           )}
 
