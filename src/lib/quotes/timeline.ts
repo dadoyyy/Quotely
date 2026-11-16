@@ -25,6 +25,7 @@ const LABELS: Record<string, (who: string) => string> = {
   approved: (who) => `${who} approved the quote`,
   rejected: (who) => `${who} declined the quote`,
   changes_requested: (who) => `${who} asked for changes`,
+  emailed: () => "Link emailed to the customer",
   link_renewed: () => "A new link was made; earlier links stopped working",
   expired: () => "The quote expired",
 };

@@ -14,6 +14,7 @@ import { buildTimeline, type TimelineComment, type TimelineEvent } from "@/lib/q
 import { isUuid } from "@/lib/search";
 import { createClient } from "@/lib/supabase/server";
 import { deleteDraftQuote } from "../actions";
+import { emailConfigured } from "@/lib/email";
 import { SharePanel } from "./share-panel";
 
 export const metadata = { title: "Quote" };
@@ -157,7 +158,7 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
             </Card>
           )}
 
-          {canWrite && <SharePanel quoteId={quote.id} mode={isDraft ? "send" : "renew"} />}
+          {canWrite && <SharePanel quoteId={quote.id} mode={isDraft ? "send" : "renew"} customerEmail={customer?.email ?? null} emailConfigured={emailConfigured()} />}
 
           {timeline.length > 0 && (
             <Card className="p-5 text-sm">

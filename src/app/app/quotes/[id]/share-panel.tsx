@@ -7,7 +7,7 @@ import { controlClass } from "@/components/ui/styles";
 import type { ShareState } from "@/lib/quotes/share-state";
 import { renewShareLink, sendQuote } from "../share-actions";
 
-export function SharePanel({ quoteId, mode }: { quoteId: string; mode: "send" | "renew" }) {
+export function SharePanel({ quoteId, mode, customerEmail, emailConfigured }: { quoteId: string; mode: "send" | "renew"; customerEmail: string | null; emailConfigured: boolean }) {
   const [state, action, pending] = useActionState(mode === "send" ? sendQuote : renewShareLink, {} as ShareState);
   const [copied, setCopied] = useState(false);
 
@@ -38,6 +38,8 @@ export function SharePanel({ quoteId, mode }: { quoteId: string; mode: "send" | 
       {state.link && (
         <div className="space-y-2">
           {state.number && <p className="font-medium text-green-700 dark:text-green-400">Sent as {state.number}.</p>}
+          {state.emailedTo && <p className="text-green-700 dark:text-green-400">Emailed to {state.emailedTo}.</p>}
+          {state.emailError && <p role="alert" className="text-amber-700 dark:text-amber-400">{state.emailError}</p>}
           <div className="flex gap-2">
             <input readOnly value={state.link} aria-label="Customer link" onFocus={(e) => e.currentTarget.select()} className={controlClass} />
             <button type="button" onClick={copy} className={buttonClass("secondary")}>{copied ? "Copied" : "Copy"}</button>
@@ -55,6 +57,19 @@ export function SharePanel({ quoteId, mode }: { quoteId: string; mode: "send" | 
         }}
       >
         <input type="hidden" name="id" value={quoteId} />
+        {customerEmail && emailConfigured ? (
+          <div className="mb-3 space-y-2">
+            <label className="flex items-center gap-2">
+              <input type="checkbox" name="email" defaultChecked className="h-4 w-4 accent-neutral-900 dark:accent-neutral-100" />
+              <span>Also email it to {customerEmail}</span>
+            </label>
+            <textarea name="message" rows={2} maxLength={1000} placeholder="Add a personal note (optional)" aria-label="Personal note" className={controlClass} />
+          </div>
+        ) : (
+          <p className="mb-3 text-xs text-neutral-500">
+            {!customerEmail ? "Add an email address to this customer to send the link by email." : "Email sending isn't set up yet, so you'll copy the link yourself."}
+          </p>
+        )}
         <button type="submit" disabled={pending || (mode === "send" && state.ok)} className={buttonClass(mode === "send" ? "primary" : "secondary")}>
           {pending ? "Working…" : mode === "send" ? "Send quote" : "Make a new link"}
         </button>

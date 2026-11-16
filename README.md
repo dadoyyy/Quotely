@@ -50,7 +50,7 @@ suite against an in-process Postgres (PGlite).
 | --- | --- | --- |
 | Supabase URL, anon key, service-role key, `DATABASE_URL` | Auth, database, storage | Next phase (auth + first screens) |
 | Google OAuth client ID and secret | "Sign in with Google" | Optional; entered in the Supabase dashboard, not in this repo |
-| Resend API key | Sending quotes by email | Phase 3 |
+| Resend API key + `EMAIL_FROM` | Emailing quote links (optional; without them you copy the link) | Phase 3 |
 | Gemini API key | AI drafting | Phase 5 |
 | GitHub | Pushing the repo | Whenever you want it hosted |
 

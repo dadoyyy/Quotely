@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { requireContext } from "@/lib/auth";
+import { composeQuoteEmail } from "@/lib/email-compose";
+import { emailConfigured, sendEmail } from "@/lib/email";
 import { publicEnv } from "@/lib/env";
 import { friendlyError } from "@/lib/errors";
 import { PricingError } from "@/lib/pricing/engine";
@@ -22,11 +24,48 @@ function rpcError(error: { code?: string; message?: string }): string {
   return friendlyError(error, "quote");
 }
 
+/**
+ * Email the link when asked. A failure here never undoes the send: the link already exists and is
+ * shown on screen, so the worst case is the sender copies it themselves.
+ */
+async function maybeEmail(
+  fd: FormData,
+  ctx: { orgId: string; orgName: string; orgEmail: string | null; userId: string },
+  quote: { id: string; title: string; total_cents: number; valid_until: string | null; customer_id: string },
+  number: string,
+  link: string,
+): Promise<Pick<ShareState, "emailedTo" | "emailError">> {
+  if (fd.get("email") !== "on") return {};
+  if (!emailConfigured()) return { emailError: "Email isn't set up yet (add RESEND_API_KEY and EMAIL_FROM). Copy the link below instead." };
+
+  const supabase = await createClient();
+  const { data: customer } = await supabase.from("customers").select("name, email").eq("id", quote.customer_id).maybeSingle();
+  if (!customer?.email) return { emailError: "This customer has no email address. Copy the link below instead." };
+
+  const mail = composeQuoteEmail({
+    businessName: ctx.orgName,
+    customerName: customer.name,
+    quoteNumber: number,
+    title: quote.title,
+    totalCents: quote.total_cents,
+    validUntil: quote.valid_until,
+    link,
+    message: String(fd.get("message") ?? "").slice(0, 1000),
+  });
+  const result = await sendEmail({ to: customer.email, ...mail, replyTo: ctx.orgEmail });
+  if (!result.ok) return { emailError: `${result.detail ?? "The email couldn't be sent"}. Copy the link below instead.` };
+
+  await supabase.from("quote_events").insert({
+    org_id: ctx.orgId, quote_id: quote.id, type: "emailed", actor_type: "staff", actor_user_id: ctx.userId, payload: { to: customer.email },
+  });
+  return { emailedTo: customer.email };
+}
+
 /** Freeze a draft and make its link. */
 export async function sendQuote(_prev: ShareState, fd: FormData): Promise<ShareState> {
   const id = fd.get("id");
   if (!isUuid(id)) return { error: "That quote couldn't be found." };
-  const { org, canWrite } = await requireContext();
+  const { org, user, canWrite } = await requireContext();
   if (!canWrite) return { error: "Your role can view quotes but not send them." };
 
   const supabase = await createClient();
@@ -69,18 +108,20 @@ export async function sendQuote(_prev: ShareState, fd: FormData): Promise<ShareS
 
   revalidatePath("/app/quotes");
   revalidatePath(`/app/quotes/${id}`);
-  return { ok: true, link: linkFor(token), number: String(number) };
+  const link = linkFor(token);
+  const sent = await maybeEmail(fd, { orgId: org.id, orgName: org.name, orgEmail: org.email, userId: user.id }, quote, String(number), link);
+  return { ok: true, link, number: String(number), ...sent };
 }
 
 /** A new link for a sent quote. Every earlier link stops working. */
 export async function renewShareLink(_prev: ShareState, fd: FormData): Promise<ShareState> {
   const id = fd.get("id");
   if (!isUuid(id)) return { error: "That quote couldn't be found." };
-  const { org, canWrite } = await requireContext();
+  const { org, user, canWrite } = await requireContext();
   if (!canWrite) return { error: "Your role can view quotes but not change them." };
 
   const supabase = await createClient();
-  const { data } = await supabase.from("quotes").select("valid_until").eq("id", id).eq("org_id", org.id).maybeSingle();
+  const { data } = await supabase.from("quotes").select("id, title, quote_number, total_cents, valid_until, customer_id").eq("id", id).eq("org_id", org.id).maybeSingle();
   if (!data) return { error: "That quote couldn't be found." };
 
   const token = generateToken();
@@ -92,5 +133,7 @@ export async function renewShareLink(_prev: ShareState, fd: FormData): Promise<S
   if (error) return { error: rpcError(error) };
 
   revalidatePath(`/app/quotes/${id}`);
-  return { ok: true, link: linkFor(token) };
+  const link = linkFor(token);
+  const sent = await maybeEmail(fd, { orgId: org.id, orgName: org.name, orgEmail: org.email, userId: user.id }, data, data.quote_number ?? "", link);
+  return { ok: true, link, ...sent };
 }
