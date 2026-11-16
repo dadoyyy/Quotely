@@ -39,7 +39,7 @@ function Backdrop() {
 
 function QuoteCard() {
   return (
-    <div className="relative my-10 max-w-md">
+    <div className="relative my-14 max-w-md">
       <div className="fx-float rounded-2xl bg-white p-5 text-neutral-900 shadow-lift">
         <div className="flex items-center justify-between border-b border-neutral-200 pb-3 text-xs">
           <span className="font-semibold">Quotation QT-2026-0042</span>
@@ -59,7 +59,7 @@ function QuoteCard() {
         <span className="relative grid size-6 place-items-center rounded-full bg-neutral-900 text-brand-400"><span className="fx-ping absolute inset-0 rounded-full bg-neutral-900" /><Check className="relative" /></span>
         Customer approved
       </div>
-      <div className="fx-float-c absolute -bottom-8 left-8 rounded-xl border border-white/10 bg-neutral-800 px-3.5 py-2 shadow-lift">
+      <div className="fx-float-c absolute -bottom-11 left-8 rounded-xl border border-white/10 bg-neutral-800 px-3.5 py-2 shadow-lift">
         <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400">Only you see this</p>
         <p className="text-sm font-semibold tabular-nums text-brand-400">Margin 32%</p>
       </div>

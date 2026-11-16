@@ -237,6 +237,7 @@ export function IconInput({ name, defaultValue, icon, className, type = "text", 
         id={name}
         name={name}
         type={isPassword && shown ? "text" : type}
+        suppressHydrationWarning
         defaultValue={value}
         aria-invalid={invalid || undefined}
         className={cn(control, "pl-10", isPassword && "pr-11", invalid && "border-red-500", className)}

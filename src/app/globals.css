@@ -111,6 +111,9 @@ main table thead th { font-weight: 600; letter-spacing: 0.06em; color: var(--col
 main table tbody tr { transition: background-color 150ms var(--ease-smooth); }
 main table tbody tr:hover { background: rgb(162 212 74 / 0.09); }
 
+/* Edge draws its own reveal button in password fields; ours replaces it. */
+input::-ms-reveal, input::-ms-clear { display: none; }
+
 /* A neat scrollbar for the wide tables. */
 * { scrollbar-width: thin; scrollbar-color: var(--color-neutral-300) transparent; }
 
