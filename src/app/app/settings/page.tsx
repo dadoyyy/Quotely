@@ -1,4 +1,4 @@
-import { ActionForm, Field, FormMessage, SubmitButton, TextArea, TextInput } from "@/components/form";
+import { ActionForm, CheckboxInput, Field, FormMessage, SubmitButton, TextArea, TextInput } from "@/components/form";
 import { Card, PageHeader } from "@/components/ui/card";
 import { requireContext } from "@/lib/auth";
 import { bpsToInput } from "@/lib/money-format";
@@ -59,6 +59,16 @@ export default async function SettingsPage() {
               <Field label="Default terms" name="defaultTerms" hint="Printed on every quotation unless you change it there.">
                 <TextArea name="defaultTerms" defaultValue={org.default_terms ?? ""} rows={5} />
               </Field>
+            </section>
+
+            <section className="space-y-4 border-t border-neutral-200 pt-6 dark:border-neutral-800">
+              <h2 className="font-medium">AI drafting</h2>
+              <CheckboxInput
+                name="aiEnabled"
+                label="Let my team draft quotes with AI"
+                hint="Your team describes a job, and the AI suggests items from your price list. It never sets prices. When used, the description and any photos are sent to Google's Gemini."
+                defaultChecked={org.ai_enabled}
+              />
             </section>
           </fieldset>
           <FormMessage />

@@ -14,6 +14,7 @@ import {
 } from "@/lib/quotes/model";
 import type { CatalogItemRow } from "@/lib/rows";
 import { saveQuoteDraft } from "../../actions";
+import { AiPanel, type AiPick } from "./ai-panel";
 import { LineRow, type Column } from "./line-row";
 
 export interface CustomerOption {
@@ -29,11 +30,12 @@ interface Props {
   initial: QuoteDraftState;
   customers: CustomerOption[];
   catalog: CatalogItemRow[];
+  aiEnabled?: boolean;
 }
 
 const CATALOG_LIST = "quote-catalog-items";
 
-export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog }: Props) {
+export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog, aiEnabled = false }: Props) {
   const [state, setState] = useState<QuoteDraftState>(initial);
   const [savedJson, setSavedJson] = useState(() => JSON.stringify(initial));
   const [showErrors, setShowErrors] = useState(false);
@@ -67,6 +69,19 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
       return { ...s, lines };
     });
   };
+
+  /** Append AI-suggested items. Prices come from the price list; the AI only supplies a quantity the customer stated. */
+  const addAiPicks = (picks: AiPick[]) =>
+    setState((s) => ({
+      ...s,
+      lines: [
+        ...s.lines,
+        ...picks.map((p) => {
+          const line = applyCatalogItem(emptyLine(null), p.item);
+          return p.quantity ? { ...line, quantity: p.quantity } : line;
+        }),
+      ],
+    }));
 
   // Move focus to a field that was just created or targeted by Enter.
   useEffect(() => {
@@ -172,6 +187,7 @@ export function QuoteBuilder({ quoteId, quoteNumber, initial, customers, catalog
 
       <div className="grid gap-4 lg:grid-cols-[1fr_21rem]">
         <div className="space-y-4">
+          {aiEnabled && <AiPanel quoteId={quoteId} catalog={catalog} onAdd={addAiPicks} />}
           <Card className="grid gap-4 p-5 sm:grid-cols-2">
             <Labeled label="Customer" error={err("customerId")}>
               <select

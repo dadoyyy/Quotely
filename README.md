@@ -52,7 +52,7 @@ suite against an in-process Postgres (PGlite).
 | Supabase URL, anon key, service-role key, `DATABASE_URL` | Auth, database, storage | Next phase (auth + first screens) |
 | Google OAuth client ID and secret | "Sign in with Google" | Optional; entered in the Supabase dashboard, not in this repo |
 | Resend API key + `EMAIL_FROM` | Emailing quote links (optional; without them you copy the link) | Phase 3 |
-| Gemini API key | AI drafting | Phase 5 |
+| Gemini API key (`GEMINI_API_KEY`, optional `GEMINI_MODEL`, `AI_DAILY_LIMIT`) | AI drafting; an owner turns it on in Settings | Phase 5 |
 | GitHub | Pushing the repo | Whenever you want it hosted |
 
 ## Status
@@ -62,4 +62,5 @@ suite against an in-process Postgres (PGlite).
 - [x] Phase 2: quote builder (atomic draft save, live totals, private margin, sections, keyboard entry)
 - [x] Phase 3 (PDF render service still to do): send, immutable snapshot, private link, public approval page, print view, activity timeline
 - [x] Phase 4: revisions (versioned, superseded on send), expiry sweep, dashboard with follow-ups, status filters, daily staff digest
-- [ ] Phases 5 to 7: AI, invoices, portfolio layer
+- [x] Phase 5: AI drafting (text + photos to price-list items; AI never sets prices; daily cap; every draft logged)
+- [ ] Phases 6 and 7: invoices and CSV export, portfolio layer

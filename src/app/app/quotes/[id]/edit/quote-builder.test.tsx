@@ -8,6 +8,7 @@ import type { LineDraft, QuoteDraftState } from "@/lib/quotes/model";
 
 const saveQuoteDraft = vi.fn();
 vi.mock("../../actions", () => ({ saveQuoteDraft: (...a: unknown[]) => saveQuoteDraft(...a) }));
+vi.mock("../../ai-actions", () => ({ draftFromDescription: vi.fn(), markAiDraftAccepted: vi.fn() }));
 vi.mock("next/link", () => ({ default: ({ href, children, ...p }: { href: string; children: React.ReactNode }) => <a href={href} {...p}>{children}</a> }));
 
 import { QuoteBuilder } from "./quote-builder";

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { parsePercentToBps } from "../money-format";
-import { emptyToNull, optionalText } from "./form";
+import { checkbox, emptyToNull, optionalText } from "./form";
 
 const prefix = z
   .string()
@@ -30,6 +30,7 @@ export const settingsSchema = z.object({
   defaultTerms: optionalText(5000),
   quoteNumberPrefix: prefix,
   invoiceNumberPrefix: prefix,
+  aiEnabled: checkbox,
 });
 
 export type SettingsInput = z.output<typeof settingsSchema>;

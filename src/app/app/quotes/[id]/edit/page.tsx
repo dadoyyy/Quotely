@@ -4,6 +4,7 @@ import { stateFromRows } from "@/lib/quotes/model";
 import type { CatalogItemRow, QuoteLineRow, QuoteRow, QuoteSectionRow } from "@/lib/rows";
 import { isUuid } from "@/lib/search";
 import { createClient } from "@/lib/supabase/server";
+import { aiAvailable } from "@/lib/ai/config";
 import { QuoteBuilder } from "./quote-builder";
 
 export const metadata = { title: "Edit quote" };
@@ -11,7 +12,7 @@ export const metadata = { title: "Edit quote" };
 export default async function EditQuotePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!isUuid(id)) notFound();
-  const { canWrite } = await requireContext();
+  const { org, canWrite } = await requireContext();
 
   const supabase = await createClient();
   const { data } = await supabase.from("quotes").select("*").eq("id", id).maybeSingle();
@@ -33,6 +34,7 @@ export default async function EditQuotePage({ params }: { params: Promise<{ id: 
       initial={stateFromRows(quote, (sections.data ?? []) as QuoteSectionRow[], (lines.data ?? []) as QuoteLineRow[])}
       customers={customers.data ?? []}
       catalog={(catalog.data ?? []) as CatalogItemRow[]}
+      aiEnabled={aiAvailable(org.ai_enabled)}
     />
   );
 }

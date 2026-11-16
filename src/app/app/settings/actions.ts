@@ -29,6 +29,7 @@ export async function updateSettings(_prev: FormState, fd: FormData): Promise<Fo
       default_terms: d.defaultTerms,
       quote_number_prefix: d.quoteNumberPrefix,
       invoice_number_prefix: d.invoiceNumberPrefix,
+      ai_enabled: d.aiEnabled,
     })
     .eq("id", org.id)
     .select("id");
