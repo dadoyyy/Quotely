@@ -4,11 +4,11 @@ import { useEffect } from "react";
 
 /**
  * Eases sections in as they scroll into view. Elements marked `.reveal` are only hidden once this
- * script is running, so without JavaScript (or with reduced motion) everything is simply visible.
+ * script is running, so without JavaScript everything is simply visible.
  */
 export function RevealOnScroll() {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+    if (!("IntersectionObserver" in window)) return;
     const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     const io = new IntersectionObserver(
       (entries) => {

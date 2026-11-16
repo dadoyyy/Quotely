@@ -29,6 +29,7 @@ export function ActionForm({
   // Every result of a save is announced: success as a toast, problems as a toast plus the inline note below.
   useEffect(() => {
     if (state.error) toast.error(state.error);
+    else if (state.fieldErrors && Object.keys(state.fieldErrors).length) toast.error("Please fix the highlighted fields.");
     else if (state.message) toast.success(state.message);
     else if (state.ok) toast.success("Saved.");
   }, [state, toast]);

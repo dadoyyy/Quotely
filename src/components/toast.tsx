@@ -63,29 +63,34 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 }
 
-const ICONS: Record<Kind, { wrap: string; path: string }> = {
-  success: { wrap: "bg-brand-400 text-neutral-900", path: "m5 12.5 4.5 4.5L19 7.5" },
-  error: { wrap: "bg-red-500 text-white", path: "M7 7l10 10M17 7 7 17" },
-  info: { wrap: "bg-neutral-900 text-brand-400", path: "M12 8h.01M11 12h1v5h1" },
+const KINDS: Record<Kind, { label: string; chip: string; text: string; bar: string; path: string }> = {
+  success: { label: "Done", chip: "bg-brand-400 text-neutral-900", text: "text-brand-400", bar: "bg-brand-400", path: "m5 12.5 4.5 4.5L19 7.5" },
+  error: { label: "Something's wrong", chip: "bg-red-500 text-white", text: "text-red-400", bar: "bg-red-500", path: "M12 7v6M12 17h.01" },
+  info: { label: "Heads up", chip: "bg-white/15 text-brand-300", text: "text-brand-300", bar: "bg-brand-300", path: "M12 8h.01M11 12h1v5h1" },
 };
+
+const SWIPE_AWAY = 80;
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number) => void }) {
   const [paused, setPaused] = useState(false);
+  const [dx, setDx] = useState(0);
+  const drag = useRef<{ x: number } | null>(null);
   const remaining = useRef(toast.duration);
   const started = useRef(0);
+  const holding = paused || dx !== 0;
 
-  // A countdown that stops while the pointer is over the toast.
+  // A countdown that stops while the pointer is over the toast or a finger is dragging it.
   useEffect(() => {
-    if (toast.leaving || paused) return;
+    if (toast.leaving || holding) return;
     started.current = Date.now();
     const timer = window.setTimeout(() => onDismiss(toast.id), remaining.current);
     return () => {
       window.clearTimeout(timer);
       remaining.current = Math.max(500, remaining.current - (Date.now() - started.current));
     };
-  }, [paused, toast.id, toast.leaving, onDismiss]);
+  }, [holding, toast.id, toast.leaving, onDismiss]);
 
-  const icon = ICONS[toast.kind];
+  const k = KINDS[toast.kind];
   return (
     <div
       role={toast.kind === "error" ? "alert" : "status"}
@@ -93,24 +98,38 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
+      onPointerDown={(e) => { if ((e.target as HTMLElement).closest("button")) return; drag.current = { x: e.clientX }; e.currentTarget.setPointerCapture(e.pointerId); }}
+      onPointerMove={(e) => { if (drag.current) setDx(e.clientX - drag.current.x); }}
+      onPointerUp={() => {
+        if (!drag.current) return;
+        drag.current = null;
+        if (Math.abs(dx) > SWIPE_AWAY) onDismiss(toast.id);
+        setDx(0);
+      }}
+      onPointerCancel={() => { drag.current = null; setDx(0); }}
+      style={dx ? { transform: `translateX(${dx}px)`, opacity: Math.max(0.3, 1 - Math.abs(dx) / 220), transition: "none" } : undefined}
       className={cn(
-        "pointer-events-auto relative w-full max-w-sm overflow-hidden rounded-2xl border bg-white shadow-lift",
-        toast.kind === "error" ? "border-red-200" : "border-neutral-200",
+        "pointer-events-auto relative w-full max-w-sm touch-pan-y select-none overflow-hidden rounded-2xl bg-neutral-900 text-white shadow-lift ring-1",
+        toast.kind === "error" ? "ring-red-400/40" : "ring-white/10",
         toast.leaving ? "animate-toast-out" : "animate-toast-in",
       )}
     >
-      <div className="flex items-start gap-3 p-3.5 pr-2.5">
-        <span aria-hidden className={cn("mt-0.5 grid size-6 shrink-0 place-items-center rounded-full", icon.wrap)}>
-          <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-            <path d={icon.path} />
+      <span aria-hidden className={cn("absolute inset-y-0 left-0 w-1", k.bar)} />
+      <div className="flex items-start gap-3 py-3 pl-4 pr-2.5">
+        <span aria-hidden className={cn("mt-0.5 grid size-7 shrink-0 place-items-center rounded-full", k.chip)}>
+          <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d={k.path} />
           </svg>
         </span>
-        <p className="min-w-0 flex-1 py-0.5 text-sm font-medium leading-snug text-neutral-900">{toast.message}</p>
+        <div className="min-w-0 flex-1">
+          <p className={cn("text-[10px] font-bold uppercase tracking-[0.14em]", k.text)}>{k.label}</p>
+          <p className="mt-0.5 text-sm font-medium leading-snug text-white">{toast.message}</p>
+        </div>
         <button
           type="button"
           onClick={() => onDismiss(toast.id)}
           aria-label="Dismiss notification"
-          className="grid size-7 shrink-0 place-items-center rounded-2xl text-neutral-400 hover:bg-neutral-100 hover:text-neutral-900"
+          className="grid size-7 shrink-0 place-items-center rounded-xl text-neutral-400 hover:bg-white/10 hover:text-white"
         >
           <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden><path d="M6 6l12 12M18 6 6 18" /></svg>
         </button>
@@ -118,8 +137,8 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
       {/* Time left */}
       <div
         aria-hidden
-        className={cn("absolute inset-x-0 bottom-0 h-0.5 origin-left animate-shrink", toast.kind === "error" ? "bg-red-400" : "bg-brand-400")}
-        style={{ animationDuration: `${toast.duration}ms`, animationPlayState: paused ? "paused" : "running" }}
+        className={cn("absolute inset-x-0 bottom-0 h-0.5 origin-left animate-shrink opacity-80", k.bar)}
+        style={{ animationDuration: `${toast.duration}ms`, animationPlayState: holding ? "paused" : "running" }}
       />
     </div>
   );
