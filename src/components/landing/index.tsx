@@ -159,7 +159,7 @@ export function Landing() {
           <section className="relative overflow-hidden border-b border-neutral-200/60 bg-[radial-gradient(rgb(14_28_21/0.07)_1px,transparent_1px)] [background-size:22px_22px]"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-12 sm:py-20 lg:py-24 grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-6">
             <div className="animate-enter space-y-6">
               <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">
-                <span className="size-1.5 rounded-full bg-brand-500" />
+                <span className="relative grid size-2 place-items-center"><span className="fx-ping absolute inset-0 rounded-full bg-brand-500" /><span className="relative size-1.5 rounded-full bg-brand-500" /></span>
                 Quotes · Approvals · Invoices
               </span>
               <h1 className="text-[2.6rem] font-semibold leading-[1.06] tracking-tight text-neutral-900 sm:text-6xl lg:text-[3.55rem] xl:text-[4.4rem] 2xl:text-[5rem]">
@@ -187,16 +187,20 @@ export function Landing() {
           </div></section>
 
           {/* ---------------------------------------------------------- who for */}
-          <section aria-label="Who it is for" className="reveal border-b border-neutral-200/60 bg-neutral-900 text-white"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-8"><p className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">Made for businesses that quote by the job</p>
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
-              {INDUSTRIES.map((i) => (
-                <li key={i.name} className="flex items-center justify-center gap-2.5 text-[15px] font-semibold text-neutral-100">
-                  <Icon d={i.d} className="size-6 text-brand-400" />
-                  {i.name}
-                </li>
-              ))}
-            </ul>
-          </div></section>
+          <section aria-label="Who it is for" className="reveal overflow-hidden border-b border-neutral-200/60 bg-neutral-900 py-7 text-white">
+            <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">Made for businesses that quote by the job</p>
+            <div className="[mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]">
+              <ul className="fx-marquee flex w-max items-center gap-14 pr-14">
+                {[...INDUSTRIES, ...INDUSTRIES, ...INDUSTRIES, ...INDUSTRIES].map((i, k) => (
+                  <li key={k} aria-hidden={k >= INDUSTRIES.length || undefined} className="flex shrink-0 items-center gap-3 text-lg font-semibold text-neutral-100">
+                    <Icon d={i.d} className="size-6 text-brand-400" />
+                    {i.name}
+                    <span aria-hidden className="ml-11 size-1.5 rotate-45 bg-brand-400/70" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
 
           {/* ---------------------------------------------------------- what */}
           <section id="what" className="reveal scroll-mt-20 bg-white"><div className="px-5 sm:px-10 lg:px-14 xl:px-20 py-16 sm:py-24">

@@ -27,10 +27,10 @@ export function HeroArt({ className }: { className?: string }) {
       <svg viewBox="0 0 520 470" className="absolute inset-0 size-full" fill="none">
         <Defs id="h" />
         <path d="M62 250c-22-92 52-176 154-196 112-22 216 22 240 114 24 92-34 194-146 224-112 30-230 0-248-142z" fill="url(#h-pale)" />
-        <ellipse cx="255" cy="238" rx="218" ry="188" stroke="#b6e266" strokeOpacity=".75" strokeWidth="2" transform="rotate(-18 255 238)" />
-        <path d="M426 40C520 120 524 296 416 388" stroke="#9ad43f" strokeOpacity=".7" strokeWidth="2" strokeDasharray="3 8" strokeLinecap="round" />
+        <g className="fx-spin"><ellipse cx="255" cy="238" rx="218" ry="188" stroke="#b6e266" strokeOpacity=".75" strokeWidth="2" strokeDasharray="2 0" transform="rotate(-18 255 238)" /><circle cx="470" cy="238" r="6" fill="#a2d44a" /></g>
+        <path d="M426 40C520 120 524 296 416 388" stroke="#9ad43f" strokeOpacity=".7" strokeWidth="2" strokeDasharray="3 8" strokeLinecap="round" className="fx-dash" />
 
-        <g transform="rotate(-7 230 240)" filter="url(#h-sh)">
+        <g className="fx-float"><g transform="rotate(-7 230 240)" filter="url(#h-sh)">
           <rect x="112" y="64" width="228" height="304" rx="26" fill="#fff" stroke="#dde8d4" />
           <path d="M112 90a26 26 0 0 1 26-26h176a26 26 0 0 1 26 26v44H112z" fill="url(#h-dark)" />
           <circle cx="146" cy="100" r="13" fill="url(#h-lime)" />
@@ -49,30 +49,42 @@ export function HeroArt({ className }: { className?: string }) {
           <rect x="150" y="314" width="52" height="7" rx="3.5" fill="#0e1c15" fillOpacity=".5" />
           <rect x="150" y="327" width="34" height="6" rx="3" fill="#0e1c15" fillOpacity=".3" />
           <rect x="244" y="313" width="60" height="16" rx="8" fill="#0e1c15" />
-        </g>
+        </g></g>
 
-        <g filter="url(#h-sm)">
+        <g className="fx-float-b"><g filter="url(#h-sm)">
           <circle cx="352" cy="108" r="46" fill="url(#h-lime)" />
           <circle cx="352" cy="108" r="36" stroke="#fff" strokeOpacity=".55" strokeWidth="2" />
           <path d="m334 108 13 13 24-28" stroke="#fff" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
           <ellipse cx="338" cy="86" rx="24" ry="10" fill="#fff" fillOpacity=".32" transform="rotate(-24 338 86)" />
-        </g>
-        <g filter="url(#h-sm)">
+        </g></g>
+        <g className="fx-float-c"><g filter="url(#h-sm)">
           <circle cx="112" cy="378" r="36" fill="url(#h-dark)" />
           <circle cx="112" cy="378" r="28" stroke="#a2d44a" strokeWidth="2.5" />
           <text x="112" y="390" textAnchor="middle" fontSize="34" fontWeight="700" fill="#a2d44a" fontFamily="system-ui, sans-serif">₱</text>
-        </g>
+        </g></g>
         <circle cx="46" cy="170" r="6" fill="#a2d44a" /><circle cx="470" cy="418" r="5" fill="#cdee80" /><circle cx="236" cy="22" r="4" fill="#a2d44a" />
       </svg>
 
-      {ORBIT.map((o) => (
+      {ORBIT.map((o, i) => (
         <div key={o.label} className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1" style={{ left: `${o.x}%`, top: `${o.y}%` }}>
-          <span className={cn("grid size-11 place-items-center rounded-full shadow-lift sm:size-12", o.tone === "dark" ? "bg-neutral-900 text-brand-400" : "bg-brand-400 text-neutral-900")}>
+          <span style={{ animationDelay: `${-i * 1.3}s` }} className={cn("fx-float-c grid size-11 place-items-center rounded-full shadow-lift sm:size-12", o.tone === "dark" ? "bg-neutral-900 text-brand-400" : "bg-brand-400 text-neutral-900")}>
             <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d={o.d} /></svg>
           </span>
           <span className="text-[11px] font-semibold text-neutral-800 sm:text-xs">{o.label}</span>
         </div>
       ))}
+
+      <div className="fx-float absolute left-0 top-[30%] flex items-center gap-2 rounded-full border border-neutral-200 bg-white py-1.5 pl-1.5 pr-3 text-xs font-semibold text-neutral-800 shadow-lift sm:text-[13px]">
+        <span className="relative grid size-6 place-items-center rounded-full bg-brand-400 text-neutral-900">
+          <span className="fx-ping absolute inset-0 rounded-full bg-brand-400" />
+          <svg viewBox="0 0 24 24" className="relative size-3.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+        </span>
+        Customer approved
+      </div>
+      <div className="fx-float-b absolute bottom-[0%] left-[38%] rounded-2xl bg-neutral-900 px-3.5 py-2 text-white shadow-lift">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400">Deposit received</p>
+        <p className="text-sm font-semibold tabular-nums text-brand-400">₱25,993.92</p>
+      </div>
     </div>
   );
 }
@@ -165,12 +177,12 @@ export function BandArt({ className }: { className?: string }) {
         {[-4, -3, -2, -1, 0, 1, 2, 3, 4].map((i) => <line key={`v${i}`} x1={190 + i * 14} y1="186" x2={190 + i * 38} y2="256" />)}
       </g>
       <circle cx="190" cy="112" r="82" stroke="#a2d44a" strokeOpacity=".45" strokeWidth="1.5" />
-      <circle cx="190" cy="112" r="108" stroke="#a2d44a" strokeOpacity=".22" strokeWidth="1.5" strokeDasharray="4 8" />
-      <path d="M54 190C96 150 118 168 150 138" stroke="#cdee80" strokeOpacity=".8" strokeWidth="2" strokeDasharray="3 7" strokeLinecap="round" />
-      <path d="M142 118 258 66l-34 96-32-34z" fill="url(#bg-lime)" />
+      <g className="fx-spin"><circle cx="190" cy="112" r="108" stroke="#a2d44a" strokeOpacity=".35" strokeWidth="1.5" strokeDasharray="4 8" /><circle cx="298" cy="112" r="5" fill="#cdee80" /></g>
+      <path d="M54 190C96 150 118 168 150 138" stroke="#cdee80" strokeOpacity=".8" strokeWidth="2" strokeDasharray="3 7" strokeLinecap="round" className="fx-dash" />
+      <g className="fx-glide"><path d="M142 118 258 66l-34 96-32-34z" fill="url(#bg-lime)" />
       <path d="m192 128 66-62-22 58z" fill="url(#bg-fold)" />
-      <path d="m192 128 6 38 20-26" fill="#6f9e22" fillOpacity=".7" />
-      <circle cx="300" cy="196" r="22" stroke="#0e1c15" strokeOpacity=".85" strokeWidth="9" strokeDasharray="7 6" fill="#12281c" />
+      <path d="m192 128 6 38 20-26" fill="#6f9e22" fillOpacity=".7" /></g>
+      <circle cx="300" cy="196" r="22" stroke="#0e1c15" strokeOpacity=".85" strokeWidth="9" strokeDasharray="7 6" fill="#12281c" className="fx-spin-fast" />
       <circle cx="300" cy="196" r="9" fill="#a2d44a" />
       <circle cx="86" cy="64" r="4" fill="#a2d44a" /><circle cx="330" cy="86" r="3" fill="#cdee80" /><circle cx="64" cy="132" r="3" fill="#cdee80" />
     </svg>

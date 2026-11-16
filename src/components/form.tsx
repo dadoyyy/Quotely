@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useActionState, useContext, useEffect, type ComponentProps, type ReactNode } from "react";
+import { createContext, useActionState, useContext, useEffect, useState, type ComponentProps, type ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 import { buttonClass } from "@/components/ui/button";
 import { controlClass } from "@/components/ui/styles";
@@ -207,6 +207,52 @@ export function CheckboxInput({
         <span className="font-medium">{label}</span>
         {hint && <span className="block text-xs text-neutral-500">{hint}</span>}
       </label>
+    </div>
+  );
+}
+
+const ICONS = {
+  mail: "M4 6h16v12H4zM4 7l8 6 8-6",
+  lock: "M6 11h12v9H6zM8.5 11V8a3.5 3.5 0 0 1 7 0v3",
+  user: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20a7.5 7.5 0 0 1 15 0",
+} as const;
+
+function Glyph({ d, className }: { d: string; className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={cn("size-[18px]", className)} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d={d} />
+    </svg>
+  );
+}
+
+/** A text input with a leading icon. Pass `type="password"` to get a show/hide toggle. */
+export function IconInput({ name, defaultValue, icon, className, type = "text", ...props }: TextProps & { icon: keyof typeof ICONS }) {
+  const { invalid, value } = useControl(name, defaultValue);
+  const [shown, setShown] = useState(false);
+  const isPassword = type === "password";
+  return (
+    <div className="group relative">
+      <Glyph d={ICONS[icon]} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors group-focus-within:text-brand-700" />
+      <input
+        id={name}
+        name={name}
+        type={isPassword && shown ? "text" : type}
+        defaultValue={value}
+        aria-invalid={invalid || undefined}
+        className={cn(control, "pl-10", isPassword && "pr-11", invalid && "border-red-500", className)}
+        {...props}
+      />
+      {isPassword && (
+        <button
+          type="button"
+          onClick={() => setShown((v) => !v)}
+          aria-label={shown ? "Hide password" : "Show password"}
+          aria-pressed={shown}
+          className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-800"
+        >
+          <Glyph d={shown ? "M3 3l18 18M10.6 6.2A9.8 9.8 0 0 1 12 6c5 0 8.5 4 9.5 6a12 12 0 0 1-2.6 3.4M6.6 7.4A12.5 12.5 0 0 0 2.5 12c1 2 4.5 6 9.5 6 1.4 0 2.7-.3 3.8-.8M9.9 9.9a3 3 0 0 0 4.2 4.2" : "M2.5 12c1-2 4.5-6 9.5-6s8.5 4 9.5 6c-1 2-4.5 6-9.5 6s-8.5-4-9.5-6zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"} />
+        </button>
+      )}
     </div>
   );
 }
