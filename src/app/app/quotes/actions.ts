@@ -150,3 +150,29 @@ export async function deleteDraftQuote(_prev: FormState, fd: FormData): Promise<
   revalidatePath("/app/quotes");
   redirect("/app/quotes");
 }
+
+/** Copy a sent quote into a new draft (next version). The old one stays as it is until the new one is sent. */
+export async function createQuoteRevision(_prev: FormState, fd: FormData): Promise<FormState> {
+  const id = fd.get("id");
+  if (!isUuid(id)) return { error: "That quote couldn't be found." };
+  const { org, canWrite } = await requireContext();
+  if (!canWrite) return { error: "Your role can view quotes but not revise them." };
+
+  const today = todayIn(org.timezone);
+  const newId = crypto.randomUUID();
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("create_revision", {
+    p_quote_id: id,
+    p_new_id: newId,
+    p_issue_date: today,
+    p_valid_until: addDays(today, org.default_validity_days),
+  });
+  if (error) {
+    if (error.code === "P0002") return { error: "That quote couldn't be found, or you can't change it." };
+    if (error.code === "23514") return { error: error.message };
+    return { error: friendlyError(error, "quote") };
+  }
+
+  revalidatePath("/app/quotes");
+  redirect(`/app/quotes/${newId}/edit`);
+}

@@ -15,11 +15,13 @@ const STATUSES = Object.keys(STATUS_LABELS) as QuoteStatus[];
 
 export default async function QuotesPage({ searchParams }: { searchParams: Promise<{ q?: string; status?: string }> }) {
   const { q, status } = await searchParams;
-  const { canWrite } = await requireContext();
+  const { canWrite, org } = await requireContext();
   const term = sanitizeSearch(q);
   const statusFilter = STATUSES.find((s) => s === status);
 
   const supabase = await createClient();
+  // Keep statuses honest: anything past its valid-until date is marked expired before we list.
+  await supabase.rpc("expire_overdue_quotes", { p_org: org.id });
   let query = supabase
     .from("quotes")
     .select("id, customer_id, quote_number, version, status, title, total_cents, valid_until, updated_at")
@@ -38,6 +40,22 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
     for (const c of customers ?? []) names.set(c.id, c.name);
   }
 
+  // Counts for the chips ignore the filter, so they always show the whole pipeline.
+  const { data: all } = await supabase.from("quotes").select("status").limit(5000);
+  const counts = new Map<string, number>();
+  for (const r of all ?? []) counts.set(r.status, (counts.get(r.status) ?? 0) + 1);
+  const chips: { label: string; status?: QuoteStatus; count: number }[] = [
+    { label: "All", count: all?.length ?? 0 },
+    ...STATUSES.filter((s) => counts.get(s)).map((s) => ({ label: STATUS_LABELS[s], status: s, count: counts.get(s) ?? 0 })),
+  ];
+  const chipHref = (st?: QuoteStatus) => {
+    const p = new URLSearchParams();
+    if (term) p.set("q", term);
+    if (st) p.set("status", st);
+    const qs = p.toString();
+    return qs ? `/app/quotes?${qs}` : "/app/quotes";
+  };
+
   const filtered = Boolean(term || statusFilter);
   return (
     <>
@@ -46,6 +64,22 @@ export default async function QuotesPage({ searchParams }: { searchParams: Promi
         description="Every quotation you've written."
         actions={canWrite && <ButtonLink href="/app/quotes/new">New quote</ButtonLink>}
       />
+
+      <nav aria-label="Filter by status" className="mb-3 flex flex-wrap gap-1.5">
+        {chips.map((c) => {
+          const active = (c.status ?? undefined) === statusFilter;
+          return (
+            <Link
+              key={c.label}
+              href={chipHref(c.status)}
+              aria-current={active ? "true" : undefined}
+              className={`rounded-full border px-3 py-1 text-xs font-medium ${active ? "border-neutral-900 bg-neutral-900 text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 text-neutral-700 hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"}`}
+            >
+              {c.label} <span className="opacity-70">{c.count}</span>
+            </Link>
+          );
+        })}
+      </nav>
 
       <form className="mb-4 flex flex-wrap gap-2" role="search">
         <input name="q" defaultValue={q ?? ""} placeholder="Search title or number" aria-label="Search quotes" className={`${controlClass} max-w-xs`} />

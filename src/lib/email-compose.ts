@@ -49,3 +49,31 @@ ${i.validUntil ? `<tr><td style="padding:2px 16px 2px 0">Valid until</td><td>${e
 
   return { subject, html, text };
 }
+
+export interface DigestItem {
+  title: string;
+  number: string | null;
+  customerName: string;
+  reason: string;
+  totalCents: number;
+}
+
+/** The daily "needs your attention" email to the business itself. */
+export function composeDigestEmail(i: { businessName: string; items: DigestItem[]; dashboardUrl: string }): { subject: string; html: string; text: string } {
+  const n = i.items.length;
+  const subject = oneLine(`${n} quote${n === 1 ? "" : "s"} need${n === 1 ? "s" : ""} your attention`);
+  const text = [
+    `${i.businessName}: ${subject.toLowerCase()}.`,
+    "",
+    ...i.items.map((x) => `- ${x.title}${x.number ? ` (${x.number})` : ""} · ${oneLine(x.customerName)} · ${formatCents(x.totalCents)}\n  ${x.reason}`),
+    "",
+    `Open your dashboard: ${i.dashboardUrl}`,
+  ].join("\n");
+  const rows = i.items
+    .map(
+      (x) => `<tr><td style="padding:10px 0;border-bottom:1px solid #e5e5e5;font-size:14px"><strong>${escapeHtml(x.title)}</strong>${x.number ? ` <span style="color:#737373">${escapeHtml(x.number)}</span>` : ""}<br><span style="color:#525252">${escapeHtml(oneLine(x.customerName))} · ${escapeHtml(formatCents(x.totalCents))}</span><br><span style="color:#171717">${escapeHtml(x.reason)}</span></td></tr>`,
+    )
+    .join("");
+  const html = `<!doctype html><html><body style="margin:0;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#171717"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px"><table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:8px;padding:28px" cellpadding="0" cellspacing="0"><tr><td><p style="margin:0 0 4px;font-size:13px;color:#737373">${escapeHtml(i.businessName)}</p><h1 style="margin:0 0 16px;font-size:18px">${escapeHtml(subject)}</h1><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table><p style="margin:20px 0 0"><a href="${escapeHtml(i.dashboardUrl)}" style="display:inline-block;background:#171717;color:#fff;text-decoration:none;padding:10px 18px;border-radius:6px;font-size:14px">Open dashboard</a></p></td></tr></table></td></tr></table></body></html>`;
+  return { subject, html, text };
+}

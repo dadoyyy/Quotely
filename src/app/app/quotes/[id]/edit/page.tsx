@@ -29,7 +29,7 @@ export default async function EditQuotePage({ params }: { params: Promise<{ id: 
   return (
     <QuoteBuilder
       quoteId={id}
-      quoteNumber={quote.quote_number}
+      quoteNumber={quote.quote_number ? `${quote.quote_number}${quote.version > 1 ? ` · version ${quote.version}` : ""}` : null}
       initial={stateFromRows(quote, (sections.data ?? []) as QuoteSectionRow[], (lines.data ?? []) as QuoteLineRow[])}
       customers={customers.data ?? []}
       catalog={(catalog.data ?? []) as CatalogItemRow[]}

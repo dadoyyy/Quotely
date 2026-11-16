@@ -43,5 +43,5 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // Skip static files and the public customer routes, which need no session.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|q/|api/public/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|q/|api/public/|api/cron/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)"],
 };

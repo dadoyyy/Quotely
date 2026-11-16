@@ -36,6 +36,13 @@
       "when": 1794806654538,
       "tag": "0004_send_and_respond",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794807720716,
+      "tag": "0005_lifecycle",
+      "breakpoints": true
     }
   ]
 }

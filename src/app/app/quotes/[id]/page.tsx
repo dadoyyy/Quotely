@@ -13,7 +13,7 @@ import type { CustomerRow, QuoteLineRow, QuoteRow, QuoteSectionRow } from "@/lib
 import { buildTimeline, type TimelineComment, type TimelineEvent } from "@/lib/quotes/timeline";
 import { isUuid } from "@/lib/search";
 import { createClient } from "@/lib/supabase/server";
-import { deleteDraftQuote } from "../actions";
+import { createQuoteRevision, deleteDraftQuote } from "../actions";
 import { emailConfigured } from "@/lib/email";
 import { SharePanel } from "./share-panel";
 
@@ -36,6 +36,10 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
     supabase.from("quote_events").select("id, type, actor_type, actor_label, created_at").eq("quote_id", id),
     supabase.from("quote_comments").select("id, author_label, body, created_at").eq("quote_id", id),
   ]);
+  const versionsRes = await supabase.from("quotes").select("id, version, status, total_cents").eq("root_quote_id", quote.root_quote_id).order("version", { ascending: false });
+  const versions = (versionsRes.data ?? []) as Pick<QuoteRow, "id" | "version" | "status" | "total_cents">[];
+  const latestVersion = versions[0]?.version ?? quote.version;
+  const canRevise = canWrite && quote.version === latestVersion && ["sent", "viewed", "changes_requested", "rejected", "expired"].includes(quote.status);
   const timeline = buildTimeline((eventsRes.data ?? []) as TimelineEvent[], (commentsRes.data ?? []) as TimelineComment[]);
   const sections = (sectionsRes.data ?? []) as QuoteSectionRow[];
   const lines = (linesRes.data ?? []) as QuoteLineRow[];
@@ -158,7 +162,35 @@ export default async function QuotePage({ params }: { params: Promise<{ id: stri
             </Card>
           )}
 
-          {canWrite && <SharePanel quoteId={quote.id} mode={isDraft ? "send" : "renew"} customerEmail={customer?.email ?? null} emailConfigured={emailConfigured()} />}
+          {canRevise && (
+            <Card className="p-5 text-sm">
+              <h2 className="font-medium">Revise this quote</h2>
+              <p className="mt-1 text-neutral-600 dark:text-neutral-400">
+                Makes a copy as version {quote.version + 1} that you can edit. This version stays as it is, and is replaced only when you send the new one.
+              </p>
+              <ActionForm action={createQuoteRevision} className="mt-3 space-y-3">
+                <input type="hidden" name="id" value={quote.id} />
+                <FormMessage />
+                <SubmitButton variant="secondary" pendingText="Creating…">Create revision</SubmitButton>
+              </ActionForm>
+            </Card>
+          )}
+
+          {versions.length > 1 && (
+            <Card className="p-5 text-sm">
+              <h2 className="mb-2 font-medium">Versions</h2>
+              <ul className="space-y-1.5">
+                {versions.map((v) => (
+                  <li key={v.id} className="flex items-center justify-between gap-2">
+                    {v.id === quote.id ? <span className="font-medium">Version {v.version} (this one)</span> : <Link href={`/app/quotes/${v.id}`} className="hover:underline">Version {v.version}</Link>}
+                    <Badge tone={STATUS_TONES[v.status]}>{STATUS_LABELS[v.status]}</Badge>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
+
+          {canWrite && !["superseded", "invoiced"].includes(quote.status) && <SharePanel quoteId={quote.id} mode={isDraft ? "send" : "renew"} customerEmail={customer?.email ?? null} emailConfigured={emailConfigured()} />}
 
           {timeline.length > 0 && (
             <Card className="p-5 text-sm">

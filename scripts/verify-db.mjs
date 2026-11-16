@@ -15,9 +15,9 @@ try {
   const [{ n: rls }] = await sql`select count(*)::int n from pg_tables where schemaname = 'public' and rowsecurity`;
   const [{ n: policies }] = await sql`select count(*)::int n from pg_policies where schemaname = 'public'`;
   const [{ n: migrations }] = await sql`select count(*)::int n from drizzle.__drizzle_migrations`;
-  const fns = await sql`select proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and proname in ('is_org_member','can_write_org','is_org_owner','create_organization','next_quote_number','next_invoice_number','save_quote_draft','send_quote','renew_share_link','record_quote_view','respond_to_quote') order by 1`;
+  const fns = await sql`select proname from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and proname in ('is_org_member','can_write_org','is_org_owner','create_organization','next_quote_number','next_invoice_number','save_quote_draft','send_quote','renew_share_link','record_quote_view','respond_to_quote','create_revision','expire_overdue_quotes') order by 1`;
 
-  const ok = tables === expected.tables && rls === expected.rls && migrations === 5 && fns.length === 11;
+  const ok = tables === expected.tables && rls === expected.rls && migrations === 6 && fns.length === 13;
   console.log({ tables, tablesWithRLS: rls, policies, migrationsApplied: migrations, functions: fns.map((f) => f.proname) });
   console.log(ok ? "OK: schema, row-level security and functions are all in place." : "NOT COMPLETE: run `npm run db:migrate` and try again.");
   process.exitCode = ok ? 0 : 1;

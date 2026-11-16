@@ -37,3 +37,25 @@ describe("quote email", () => {
     expect(m.text).not.toContain("Valid until");
   });
 });
+
+import { composeDigestEmail } from "./email-compose";
+
+describe("digest email", () => {
+  const items = [
+    { title: "Kitchen <b>remodel</b>", number: "Q-2026-0001", customerName: "Maria\nCruz", reason: "Expires in 2 days.", totalCents: 2_429_149 },
+    { title: "Aircon service", number: null, customerName: "Reyes", reason: "Asked for changes. Send a revision.", totalCents: 500_000 },
+  ];
+  it("lists each quote with its reason and a dashboard link, escaping what users typed", () => {
+    const m = composeDigestEmail({ businessName: "Acme", items, dashboardUrl: "https://app.example.com/app" });
+    expect(m.subject).toBe("2 quotes need your attention");
+    expect(m.html).toContain("Kitchen &lt;b&gt;remodel&lt;/b&gt;");
+    expect(m.html).not.toContain("<b>remodel");
+    for (const part of ["₱24,291.49", "Expires in 2 days.", "Send a revision", "https://app.example.com/app", "Q-2026-0001"]) {
+      expect(m.html).toContain(part);
+      expect(m.text).toContain(part);
+    }
+  });
+  it("uses the singular for one quote", () => {
+    expect(composeDigestEmail({ businessName: "Acme", items: [items[1]], dashboardUrl: "https://x.test/app" }).subject).toBe("1 quote needs your attention");
+  });
+});
